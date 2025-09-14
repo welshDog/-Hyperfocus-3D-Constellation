@@ -1,0 +1,127 @@
+{
+  "name": "hyperfocus-3d-constellation",
+  "version": "1.0.0",
+  "description": "The world's most advanced 3D repository visualization designed for neurodivergent minds",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -p 8000",
+    "dev": "npx live-server --port=8000 --no-browser",
+    "build": "echo 'No build process needed - static files ready!'",
+    "test": "npm run test:accessibility && npm run test:performance",
+    "test:accessibility": "axe-cli http://localhost:8000",
+    "test:performance": "lighthouse http://localhost:8000 --view",
+    "lint": "eslint app.js --fix",
+    "lint:css": "stylelint style.css --fix",
+    "validate:html": "html-validate index.html",
+    "deploy": "gh-pages -d .",
+    "clean": "rm -rf node_modules/.cache",
+    "check-deps": "npm audit && npm outdated"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/welshDog/hyperfocus-3d-constellation.git"
+  },
+  "keywords": [
+    "3d",
+    "webgl",
+    "accessibility",
+    "neurodivergent",
+    "adhd",
+    "autism",
+    "dyslexia",
+    "inclusive-design",
+    "portfolio",
+    "visualization",
+    "three.js",
+    "javascript",
+    "html5",
+    "css3",
+    "responsive",
+    "mobile-friendly",
+    "screen-reader",
+    "keyboard-navigation",
+    "wcag",
+    "a11y"
+  ],
+  "author": {
+    "name": "Lyndon J Williams (welshDog)",
+    "email": "welshdog@hyperfocuszone.com",
+    "url": "https://github.com/welshDog"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/welshDog/hyperfocus-3d-constellation/issues"
+  },
+  "homepage": "https://welshdog.github.io/hyperfocus-3d-constellation/",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 11",
+    "not dead"
+  ],
+  "devDependencies": {
+    "@axe-core/cli": "^4.8.0",
+    "eslint": "^8.50.0",
+    "gh-pages": "^6.0.0",
+    "html-validate": "^8.5.0",
+    "lighthouse": "^11.0.0",
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0"
+  },
+  "optionalDependencies": {
+    "puppeteer": "^21.3.0"
+  },
+  "config": {
+    "port": 8000,
+    "host": "localhost"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/welshDog"
+    },
+    {
+      "type": "individual",
+      "url": "https://hyperfocus-mode.teemill.com/"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Neurodivergent Community",
+      "url": "https://discord.gg/ZKpHHrDctT"
+    }
+  ],
+  "files": [
+    "index.html",
+    "style.css", 
+    "app.js",
+    "README.md",
+    "LICENSE",
+    "assets/",
+    "docs/"
+  ],
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "os": [
+    "darwin",
+    "linux", 
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "preferGlobal": false,
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

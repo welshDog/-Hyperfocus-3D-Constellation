@@ -1,0 +1,71 @@
+---
+name: 🐛 Bug Report
+about: Report a bug to help us improve the constellation
+title: '[BUG] '
+labels: ['bug', 'needs-triage']
+assignees: ['welshDog']
+---
+
+## 🐛 **Bug Description**
+<!-- Clear, concise description of what went wrong -->
+
+
+
+## 🔄 **Steps to Reproduce**
+<!-- Tell us exactly how to recreate this issue -->
+1. Go to...
+2. Click on...  
+3. See error...
+
+## ✅ **Expected Behavior**
+<!-- What should have happened instead? -->
+
+
+
+## 📱 **Environment**
+<!-- Help us understand your setup -->
+- **Browser:** Chrome/Firefox/Safari/Edge (with version)
+- **Operating System:** Windows/macOS/Linux/iOS/Android
+- **Device Type:** Desktop/Mobile/Tablet
+- **Screen Size:** (if relevant)
+- **Assistive Technology:** Screen reader/Voice control/etc. (if applicable)
+
+## ♿ **Accessibility Impact** 
+<!-- Does this affect users with disabilities? -->
+- [ ] Affects keyboard navigation
+- [ ] Affects screen readers
+- [ ] Affects users with motion sensitivity  
+- [ ] Affects color blind users
+- [ ] Affects cognitive accessibility
+- [ ] Other accessibility impact: ___
+
+## 🧠 **Neurodivergent User Impact**
+<!-- How does this affect ADHD/autistic/dyslexic users? -->
+- [ ] Disrupts focus/hyperfocus
+- [ ] Creates sensory overload
+- [ ] Interferes with routine/predictable patterns
+- [ ] Makes text harder to read
+- [ ] Increases cognitive load
+- [ ] Other impact: ___
+
+## 📸 **Screenshots/Media**
+<!-- If helpful, add screenshots, videos, or audio recordings -->
+
+
+
+## 🔍 **Additional Context**
+<!-- Anything else that might help us understand the issue -->
+- Console errors (if any):
+- Network conditions:
+- Any workarounds you found:
+- How often does this happen:
+
+## 💭 **Suggested Solution** (Optional)
+<!-- If you have ideas for fixing this, we'd love to hear them! -->
+
+
+
+---
+
+## 🙏 **Thank You!**
+**Every bug report makes the constellation better for everyone.** We especially appreciate reports that consider neurodivergent user needs - different perspectives help us build better solutions! 💜

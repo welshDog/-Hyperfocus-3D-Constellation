@@ -1,0 +1,94 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+*.tgz
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+.stylelintcache
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Coverage and test results
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+lighthouse-reports/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Browser artifacts
+.axe-results/
+selenium-debug.log
+chromedriver.log
+geckodriver.log
+
+# Security
+*.pem
+*.p12
+*.key
+*.crt
+secrets/
+
+# Lighthouse CI
+.lighthouseci/
+
+# Accessibility reports
+accessibility-reports/
+axe-reports/
+
+# Performance reports  
+performance-reports/
+bundle-analyzer/
+
+# GitHub Pages (if using different branch)
+_site/
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# Backup files
+*.bak
+*.backup
