@@ -1171,6 +1171,22 @@ select.form-control {
   gap: var(--space-12);
 }
 
+@media (max-width: 768px) {
+  .filter-panel, .accessibility-panel {
+    width: 150px; /* Smaller width */
+  }
+}
+
+@media (max-width: 480px) {
+  .minimap { display: none; } /* Hide on very small screens */
+}
+
+.filter-panel { border: 3px solid red !important; }
+.accessibility-panel { border: 3px solid blue !important; }
+.minimap { border: 3px solid green !important; }
+.tour-controls { border: 3px solid yellow !important; }
+}
+
 /* Mini-map */
 .minimap {
   position: absolute;
@@ -1206,6 +1222,38 @@ select.form-control {
   gap: var(--space-8);
   font-size: var(--font-size-xs);
   color: rgba(255, 255, 255, 0.8);
+}
+
+.filter-panel.glass-panel {
+  position: absolute !important;
+  top: var(--space-20) !important;
+  left: var(--space-20) !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+.accessibility-panel.glass-panel {
+  position: absolute !important;
+  bottom: var(--space-20) !important;
+  right: var(--space-20) !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+.minimap {
+  position: absolute !important;
+  top: var(--space-20) !important;
+  right: var(--space-20) !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+.tour-controls {
+  position: absolute !important;
+  bottom: var(--space-20) !important;
+  left: var(--space-20) !important;
+  top: auto !important;
+  right: auto !important;
 }
 
 .legend-color {
