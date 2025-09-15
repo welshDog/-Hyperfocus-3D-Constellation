@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Hyperfocus Constellation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <!-- Main Canvas for 3D Constellation -->
+    <canvas id="constellation-canvas"></canvas>
+    
+    <!-- Performance Stats -->
+    <div class="stats-panel glass-panel draggable-panel" id="stats-panel">
+        <div class="panel-header">📊 Performance</div>
+        <div class="stats-content">
+            <div>FPS: <span id="fps">--</span></div>
+            <div>Render: <span id="render-time">--</span>ms</div>
+        </div>
+    </div>
+
+    <!-- Hyperfocus Story Panel -->
+    <div class="hyperfocus-story glass-panel draggable-panel" id="story-panel">
+        <div class="panel-header">⋮⋮ HYPERFOCUS STORY</div>
+        <div class="story-content">
+            <h2>GO HERE</h2>
+            <p>Explore the neurodivergent-designed 3D galaxy where every repository tells a story of innovation and accessibility.</p>
+            <button class="cta-button">Start Journey</button>
+        </div>
+    </div>
+
+    <!-- Categories Panel -->
+    <div class="categories-panel glass-panel draggable-panel" id="categories-panel">
+        <div class="panel-header">⋮⋮ Categories</div>
+        <div class="categories-content">
+            <button class="category-btn active" data-category="all">All (<span id="count-all">20</span>)</button>
+            <button class="category-btn" data-category="core">Core Empire (<span id="count-core">6</span>)</button>
+            <button class="category-btn" data-category="creative">Creative (<span id="count-creative">5</span>)</button>
+            <button class="category-btn" data-category="dev">Dev Tools (<span id="count-dev">6</span>)</button>
+            <button class="category-btn" data-category="social">Social (<span id="count-social">3</span>)</button>
+        </div>
+    </div>
+
+    <!-- Accessibility Panel -->
+    <div class="accessibility-panel glass-panel draggable-panel" id="accessibility-panel">
+        <div class="panel-header">⋮⋮ Accessibility</div>
+        <div class="accessibility-content">
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="reduce-motion"> 🐌 Reduce Motion
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="focus-mode"> 🎯 Focus Mode
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="spatial-audio"> 🔊 Spatial Audio
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="high-contrast"> 🌓 High Contrast
+                </label>
+            </div>
+            <div class="slider-group">
+                <label>🎵 Ambient: <span id="ambient-value">50</span></label>
+                <input type="range" id="ambient-volume" min="0" max="100" value="50">
+            </div>
+            <div class="slider-group">
+                <label>🔊 Effects: <span id="effects-value">30</span></label>
+                <input type="range" id="effects-volume" min="0" max="100" value="30">
+            </div>
+        </div>
+    </div>
+
+    <!-- Repository Info Panel -->
+    <div class="repo-info-panel glass-panel draggable-panel" id="repo-info-panel" style="display: none;">
+        <div class="panel-header">⋮⋮ Repository Details</div>
+        <div class="repo-content">
+            <h3 id="repo-title">Repository Name</h3>
+            <p id="repo-description">Repository description will appear here...</p>
+            <div class="repo-stats">
+                <span id="repo-stars">⭐ 0</span>
+                <span id="repo-language">🔧 Language</span>
+            </div>
+            <div class="repo-actions">
+                <a id="repo-github-link" href="#" target="_blank">🔗 View on GitHub</a>
+                <button id="bookmark-btn">Bookmark</button>
+                <button id="share-btn">📤 Share View</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini Map -->
+    <div class="minimap glass-panel draggable-panel" id="minimap-panel">
+        <div class="panel-header">⋮⋮ Galaxy Map</div>
+        <div class="minimap-content">
+            <div class="minimap-legend">
+                <div class="legend-item"><span class="color-core"></span> Core Empire</div>
+                <div class="legend-item"><span class="color-creative"></span> Creative</div>
+                <div class="legend-item"><span class="color-dev"></span> Dev Tools</div>
+                <div class="legend-item"><span class="color-social"></span> Social</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Controls -->
+    <div class="tour-controls glass-panel draggable-panel" id="tour-controls">
+        <div class="panel-header">⋮⋮ Navigation</div>
+        <div class="tour-content">
+            <button class="tour-btn" id="guided-tour">🚀 Guided Tour</button>
+            <button class="tour-btn" id="export-view">📸 Export View</button>
+            <button class="tour-btn" id="reset-camera">🏠 Reset Camera</button>
+            <div class="bookmarks">
+                <h4>🔖 Bookmarked Repositories</h4>
+                <div id="bookmark-list">
+                    <!-- Bookmarks will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sponsors Logo Box -->
+    <div class="sponsors-logo glass-panel draggable-panel" id="sponsors-panel">
+        <div class="panel-header">⋮⋮ SPONSORS LOGO BOXS</div>
+        <div class="sponsors-content">
+            <div class="sponsor-slot">Sponsor 1</div>
+            <div class="sponsor-slot">Sponsor 2</div>
+            <div class="sponsor-slot">Sponsor 3</div>
+        </div>
+    </div>
+
+    <!-- Hyperfocus Ad Box -->
+    <div class="hyperfocus-ad glass-panel draggable-panel" id="ad-panel">
+        <div class="panel-header">⋮⋮ HYPERFOCUS AD BOX</div>
+        <div class="ad-content">
+            <h3>Join the Hyperfocus Zone</h3>
+            <p>Discover tools and resources designed for neurodivergent minds.</p>
+            <button class="ad-cta">Learn More</button>
+        </div>
+    </div>
+
+    <!-- Search Bar (Top Center) -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search repositories..." />
+        <div class="search-filters">
+            <button class="filter-btn active" data-filter="all">All (24)</button>
+            <button class="filter-btn" data-filter="core">Core</button>
+            <button class="filter-btn" data-filter="creative">Creative</button>
+            <button class="filter-btn" data-filter="social">Social</button>
+            <button class="filter-btn" data-filter="dev">Dev</button>
+            <button class="portal-mode-btn">🌀 Portal Mode</button>
+        </div>
+    </div>
+
+    <!-- Layout Control Panel -->
+    <div class="layout-controls">
+        <button id="reset-layout-btn" title="Reset Panel Layout">🔄 Reset Layout</button>
+        <button id="save-layout-btn" title="Save Current Layout">💾 Save Layout</button>
+        <button id="toggle-all-panels" title="Show/Hide All Panels">👁️ Toggle Panels</button>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2>Initializing Constellation...</h2>
+            <p id="loading-status">Mapping repositories to stars</p>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        // Initialize draggable panels system
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDraggablePanels();
+        });
+    </script>
+</body>
+</html>
