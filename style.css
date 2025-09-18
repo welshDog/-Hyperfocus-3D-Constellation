@@ -1185,7 +1185,7 @@ select.form-control {
 .accessibility-panel { border: 3px solid blue !important; }
 .minimap { border: 3px solid green !important; }
 .tour-controls { border: 3px solid yellow !important; }
-}
+
 
 /* Mini-map */
 .minimap {

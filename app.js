@@ -1,4 +1,4 @@
-// Repository data from the application
+// Repository data
 const repositories = [
   {
     "name": "-MIND-VAULT-ULTIMATE-GAME",
