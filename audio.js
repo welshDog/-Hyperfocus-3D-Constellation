@@ -1,5 +1,5 @@
 // Audio Context Setup
-class AudioEngine {
+export class AudioEngine {
     constructor() {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.masterGain = this.audioContext.createGain();
@@ -387,11 +387,11 @@ class AudioEngine {
 }
 
 // Global audio engine instance
-const audioEngine = new AudioEngine();
+// const audioEngine = new AudioEngine();
 
 // Resume audio context on user interaction
-document.addEventListener('click', () => {
-    if (audioEngine.audioContext.state === 'suspended') {
-        audioEngine.audioContext.resume();
-    }
-});
+// document.addEventListener('click', () => {
+//     if (audioEngine.audioContext.state === 'suspended') {
+//         audioEngine.audioContext.resume();
+//     }
+// });

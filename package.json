@@ -1,6 +1,7 @@
 {
   "name": "hyperfocus-3d-constellation",
   "version": "1.0.0",
+  "type": "module",
   "description": "The world's most advanced 3D repository visualization designed for neurodivergent minds",
   "main": "app.js",
   "scripts": {
@@ -54,6 +55,10 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "transform": {},
+    "testMatch": [
+      "**/tests/*.test.js"
+    ],
     "setupFilesAfterEnv": [
       "@testing-library/jest-dom"
     ],

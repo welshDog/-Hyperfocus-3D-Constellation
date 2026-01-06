@@ -1,3 +1,70 @@
+import { jest } from '@jest/globals';
+import { AudioEngine } from '../audio.js';
+
+// Mock Web Audio API
+window.AudioContext = class {
+  constructor() {
+    this.state = 'running';
+    this.destination = {};
+    this.currentTime = 0;
+  }
+  createGain() {
+    return {
+      connect: jest.fn(),
+      gain: {
+        value: 0,
+        setValueAtTime: jest.fn(),
+        linearRampToValueAtTime: jest.fn(),
+        exponentialRampToValueAtTime: jest.fn()
+      }
+    };
+  }
+  createOscillator() {
+    return {
+      connect: jest.fn(),
+      start: jest.fn(),
+      stop: jest.fn(),
+      frequency: {
+        value: 0,
+        setValueAtTime: jest.fn(),
+        linearRampToValueAtTime: jest.fn(),
+        exponentialRampToValueAtTime: jest.fn()
+      },
+      type: 'sine'
+    };
+  }
+  createBiquadFilter() {
+    return {
+      connect: jest.fn(),
+      type: 'lowpass',
+      frequency: {
+        value: 0,
+        setValueAtTime: jest.fn(),
+        linearRampToValueAtTime: jest.fn()
+      }
+    };
+  }
+  createBuffer() {
+    return {
+      getChannelData: jest.fn(() => new Float32Array(1024))
+    };
+  }
+  createBufferSource() {
+    return {
+      connect: jest.fn(),
+      start: jest.fn(),
+      stop: jest.fn(),
+      buffer: null
+    };
+  }
+  close() {
+    return Promise.resolve();
+  }
+  resume() {
+    return Promise.resolve();
+  }
+};
+
 describe('AudioEngine', () => {
   let audioEngine;
 
