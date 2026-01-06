@@ -1,5 +1,31 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import {
+  Raycaster,
+  Vector2,
+  Scene,
+  Fog,
+  SphereGeometry,
+  MeshBasicMaterial,
+  BackSide,
+  Mesh,
+  PerspectiveCamera,
+  WebGLRenderer,
+  PCFSoftShadowMap,
+  SRGBColorSpace,
+  ACESFilmicToneMapping,
+  AmbientLight,
+  DirectionalLight,
+  PointLight,
+  BufferGeometry,
+  PointsMaterial,
+  Float32BufferAttribute,
+  Points,
+  MeshPhongMaterial,
+  BufferAttribute,
+  AdditiveBlending,
+  LineBasicMaterial,
+  LineSegments,
+  Vector3
+} from 'three';
 import { repositories, categoryConfig } from './data.js';
 
 export class GalaxyScene {
@@ -20,8 +46,8 @@ export class GalaxyScene {
     this.selectedRepo = null;
     
     // Interaction
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
+    this.raycaster = new Raycaster();
+    this.mouse = new Vector2();
     
     // State
     this.isMotionReduced = false;
@@ -34,16 +60,22 @@ export class GalaxyScene {
     this.init();
   }
 
-  init() {
+  async init() {
     this.setupScene();
     this.setupCamera();
     this.setupRenderer();
-    this.setupControls();
     this.setupLighting();
-    this.createStarField();
-    this.createRepositorySpheres();
-    this.setupMinimap();
+
+    // Defer heavy initialization tasks
+    const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
     
+    idleCallback(() => this.createStarField());
+    idleCallback(() => this.createRepositorySpheres());
+    idleCallback(() => this.setupMinimap());
+    
+    // Lazy load controls
+    await this.setupControls();
+
     // Bind interaction events
     this.canvas.addEventListener('click', (e) => this.handleMouseClick(e));
     this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
@@ -53,23 +85,23 @@ export class GalaxyScene {
   }
 
   setupScene() {
-    this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(0x000000, 50, 300);
+    this.scene = new Scene();
+    this.scene.fog = new Fog(0x000000, 50, 300);
     
     // Add subtle nebula background
-    const nebulaGeometry = new THREE.SphereGeometry(200, 32, 32);
-    const nebulaMaterial = new THREE.MeshBasicMaterial({
+    const nebulaGeometry = new SphereGeometry(200, 32, 32);
+    const nebulaMaterial = new MeshBasicMaterial({
       color: 0x0a0a2e,
       transparent: true,
       opacity: 0.3,
-      side: THREE.BackSide
+      side: BackSide
     });
-    const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
+    const nebula = new Mesh(nebulaGeometry, nebulaMaterial);
     this.scene.add(nebula);
   }
 
   setupCamera() {
-    this.camera = new THREE.PerspectiveCamera(
+    this.camera = new PerspectiveCamera(
       75, 
       window.innerWidth / window.innerHeight, 
       0.1, 
@@ -79,7 +111,7 @@ export class GalaxyScene {
   }
 
   setupRenderer() {
-    this.renderer = new THREE.WebGLRenderer({ 
+    this.renderer = new WebGLRenderer({ 
       canvas: this.canvas, 
       antialias: true,
       alpha: true 
@@ -87,13 +119,14 @@ export class GalaxyScene {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.shadowMap.type = PCFSoftShadowMap;
+    this.renderer.outputColorSpace = SRGBColorSpace;
+    this.renderer.toneMapping = ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.2;
   }
 
-  setupControls() {
+  async setupControls() {
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
@@ -105,28 +138,28 @@ export class GalaxyScene {
   }
 
   setupLighting() {
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    const ambientLight = new AmbientLight(0x404040, 0.6);
     this.scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    const directionalLight = new DirectionalLight(0xffffff, 1.0);
     directionalLight.position.set(50, 50, 50);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
     this.scene.add(directionalLight);
 
-    const pointLight1 = new THREE.PointLight(0x00d4ff, 0.8, 100);
+    const pointLight1 = new PointLight(0x00d4ff, 0.8, 100);
     pointLight1.position.set(-30, 20, 30);
     this.scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0xff6b9d, 0.6, 80);
+    const pointLight2 = new PointLight(0xff6b9d, 0.6, 80);
     pointLight2.position.set(30, -20, -30);
     this.scene.add(pointLight2);
   }
 
   createStarField() {
-    const starsGeometry = new THREE.BufferGeometry();
-    const starsMaterial = new THREE.PointsMaterial({
+    const starsGeometry = new BufferGeometry();
+    const starsMaterial = new PointsMaterial({
       color: 0xffffff,
       size: 0.5,
       transparent: true,
@@ -141,8 +174,8 @@ export class GalaxyScene {
       starsVertices.push(x, y, z);
     }
 
-    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
-    const starField = new THREE.Points(starsGeometry, starsMaterial);
+    starsGeometry.setAttribute('position', new Float32BufferAttribute(starsVertices, 3));
+    const starField = new Points(starsGeometry, starsMaterial);
     this.scene.add(starField);
   }
 
@@ -168,9 +201,9 @@ export class GalaxyScene {
       z: Math.sin(angle) * distance
     };
 
-    const geometry = new THREE.SphereGeometry(radius, 32, 32);
+    const geometry = new SphereGeometry(radius, 32, 32);
     
-    const material = new THREE.MeshPhongMaterial({
+    const material = new MeshPhongMaterial({
       color: config.color,
       emissive: config.emissive,
       emissiveIntensity: 0.2,
@@ -179,7 +212,7 @@ export class GalaxyScene {
       opacity: 0.9
     });
 
-    const sphere = new THREE.Mesh(geometry, material);
+    const sphere = new Mesh(geometry, material);
     sphere.position.set(position.x, position.y, position.z);
     sphere.castShadow = true;
     sphere.receiveShadow = true;
@@ -194,14 +227,14 @@ export class GalaxyScene {
       originalEmissiveIntensity: 0.2
     };
 
-    const glowGeometry = new THREE.SphereGeometry(radius * 1.3, 16, 16);
-    const glowMaterial = new THREE.MeshBasicMaterial({
+    const glowGeometry = new SphereGeometry(radius * 1.3, 16, 16);
+    const glowMaterial = new MeshBasicMaterial({
       color: config.color,
       transparent: true,
       opacity: 0.1,
-      side: THREE.BackSide
+      side: BackSide
     });
-    const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+    const glowSphere = new Mesh(glowGeometry, glowMaterial);
     sphere.add(glowSphere);
 
     this.createParticleSystem(sphere, config.particleColor);
@@ -212,7 +245,7 @@ export class GalaxyScene {
 
   createParticleSystem(parentSphere, color) {
     const particleCount = 100;
-    const particles = new THREE.BufferGeometry();
+    const particles = new BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3);
     
@@ -231,24 +264,24 @@ export class GalaxyScene {
       velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
     }
     
-    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particles.setAttribute('position', new BufferAttribute(positions, 3));
     particles.userData = { velocities: velocities };
     
-    const particleMaterial = new THREE.PointsMaterial({
+    const particleMaterial = new PointsMaterial({
       color: color,
       size: 0.1,
       transparent: true,
       opacity: 0.6,
-      blending: THREE.AdditiveBlending
+      blending: AdditiveBlending
     });
     
-    const particleSystem = new THREE.Points(particles, particleMaterial);
+    const particleSystem = new Points(particles, particleMaterial);
     parentSphere.add(particleSystem);
     this.particleSystems.push({ system: particleSystem, parent: parentSphere });
   }
 
   createConnectionLines() {
-    const lineGeometry = new THREE.BufferGeometry();
+    const lineGeometry = new BufferGeometry();
     const linePositions = [];
     
     repositories.forEach((repo1, i) => {
@@ -266,13 +299,13 @@ export class GalaxyScene {
     });
     
     if (linePositions.length > 0) {
-      lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-      const lineMaterial = new THREE.LineBasicMaterial({
+      lineGeometry.setAttribute('position', new Float32BufferAttribute(linePositions, 3));
+      const lineMaterial = new LineBasicMaterial({
         color: 0x333333,
         transparent: true,
         opacity: 0.3
       });
-      const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+      const lines = new LineSegments(lineGeometry, lineMaterial);
       this.scene.add(lines);
     }
   }
@@ -524,7 +557,7 @@ export class GalaxyScene {
 
   resetCamera() {
     if (!this.isMotionReduced) {
-      this.animateCameraTo(new THREE.Vector3(0, 0, 50));
+      this.animateCameraTo(new Vector3(0, 0, 50));
     } else {
       this.camera.position.set(0, 0, 50);
       this.controls.target.set(0, 0, 0);

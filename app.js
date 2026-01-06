@@ -1,12 +1,39 @@
 import { repositories } from './data.js';
 import { GalaxyScene } from './scene.js';
-import { UIManager, initializeDraggablePanels } from './ui.js';
 
 class ConstellationApp {
   constructor() {
     this.bookmarkedRepos = new Set();
+    this.ui = null;
     
-    // Initialize UI Manager
+    // Initialize Galaxy Scene
+    this.scene = new GalaxyScene('galaxy-canvas', {
+      onSelect: (repo) => {
+        if (this.ui) {
+          this.ui.showRepoInfo(repo, this.bookmarkedRepos.has(repo.name));
+          this.ui.playClickSound();
+          this.ui.triggerAchievement('Repository Explorer', `Visited ${repo.name}`);
+        }
+      },
+      onDeselect: () => {
+        if (this.ui) this.ui.hideRepoInfo();
+      }
+    });
+    
+    // Lazy Initialize UI
+    this.initUI();
+  }
+
+  async initUI() {
+    // Yield to main thread to prioritize scene rendering
+    if ('requestIdleCallback' in window) {
+      await new Promise(r => requestIdleCallback(r));
+    } else {
+      await new Promise(r => setTimeout(r, 100));
+    }
+
+    const { UIManager, initializeDraggablePanels } = await import('./ui.js');
+
     this.ui = new UIManager({
       onSearch: (query) => this.handleSearch(query),
       onFilter: (category) => this.handleFilter(category),
@@ -17,13 +44,13 @@ class ConstellationApp {
       onExport: () => this.exportView(),
       onReset: () => {
         this.scene.resetCamera();
-        this.ui.hideRepoInfo();
+        if (this.ui) this.ui.hideRepoInfo();
       },
       onBookmarkToggle: () => this.toggleBookmark(),
       onBookmarkClick: (repoName) => {
         this.scene.flyToRepository(repoName);
         const repo = repositories.find(r => r.name === repoName);
-        if (repo) this.ui.showRepoInfo(repo, true);
+        if (repo && this.ui) this.ui.showRepoInfo(repo, true);
       },
       onBookmarkRemove: (repoName) => this.removeBookmark(repoName),
       onCloseInfo: () => {
@@ -31,16 +58,6 @@ class ConstellationApp {
       }
     });
 
-    // Initialize Galaxy Scene
-    this.scene = new GalaxyScene('galaxy-canvas', {
-      onSelect: (repo) => {
-        this.ui.showRepoInfo(repo, this.bookmarkedRepos.has(repo.name));
-        this.ui.playClickSound();
-        this.ui.triggerAchievement('Repository Explorer', `Visited ${repo.name}`);
-      },
-      onDeselect: () => this.ui.hideRepoInfo()
-    });
-    
     // Initial setup
     this.updateCounts();
     this.ui.startLoadingSequence();
