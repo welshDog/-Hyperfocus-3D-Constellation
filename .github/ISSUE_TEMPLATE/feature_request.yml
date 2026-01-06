@@ -1,0 +1,62 @@
+name: '✨ Feature Request'
+description: Suggest an idea for the 3D gallery
+title: '[FEATURE] '
+labels: ['enhancement', 'triage']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request
+        Got an idea to make the gallery even better? We'd love to hear it!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 'What problem does this solve?'
+      description: 'Describe the problem or use case'
+      placeholder: 'Users can’t easily find archived projects because...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 'Proposed Solution'
+      description: 'How would you solve it?'
+      placeholder: 'Add a toggle to show/hide archived repos'
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 'Alternatives Considered'
+      description: 'Any other approaches?'
+      placeholder: 'Could use a separate view, but a toggle seems cleaner'
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 'Priority'
+      options:
+        - Low (nice to have)
+        - Medium (helpful)
+        - High (blocks usage)
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 'Additional Context'
+      description: 'Screenshots, links, or other details'
+      placeholder: 'Paste screenshots if relevant'
+
+  - type: checkbox
+    id: agree
+    attributes:
+      label: 'I have checked existing feature requests'
+      description: 'Please search first to avoid duplicates'
+    validations:
+      required: true
