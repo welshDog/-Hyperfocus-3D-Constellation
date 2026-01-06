@@ -21,49 +21,60 @@ class ConstellationApp {
     });
     
     // Lazy Initialize UI
-    this.initUI();
+    this.initUI().catch(err => {
+      console.error('Failed to initialize UI:', err);
+      const loadingStatus = document.getElementById('loading-status');
+      if (loadingStatus) {
+        loadingStatus.innerHTML = `<span style="color: #ff4444">Error: ${err.message}</span>`;
+      }
+    });
   }
 
   async initUI() {
-    // Yield to main thread to prioritize scene rendering
-    if ('requestIdleCallback' in window) {
-      await new Promise(r => requestIdleCallback(r));
-    } else {
-      await new Promise(r => setTimeout(r, 100));
-    }
-
-    const { UIManager, initializeDraggablePanels } = await import('./ui.js');
-
-    this.ui = new UIManager({
-      onSearch: (query) => this.handleSearch(query),
-      onFilter: (category) => this.handleFilter(category),
-      onMotionToggle: (enabled) => this.scene.setMotionReduced(enabled),
-      onFocusToggle: (enabled) => console.log('Focus mode:', enabled),
-      onContrastToggle: (enabled) => console.log('High contrast:', enabled),
-      onTourStart: () => this.startTour(),
-      onExport: () => this.exportView(),
-      onReset: () => {
-        this.scene.resetCamera();
-        if (this.ui) this.ui.hideRepoInfo();
-      },
-      onBookmarkToggle: () => this.toggleBookmark(),
-      onBookmarkClick: (repoName) => {
-        this.scene.flyToRepository(repoName);
-        const repo = repositories.find(r => r.name === repoName);
-        if (repo && this.ui) this.ui.showRepoInfo(repo, true);
-      },
-      onBookmarkRemove: (repoName) => this.removeBookmark(repoName),
-      onCloseInfo: () => {
-        this.scene.selectedRepo = null;
+    try {
+      // Yield to main thread to prioritize scene rendering
+      if ('requestIdleCallback' in window) {
+        await new Promise(r => requestIdleCallback(r));
+      } else {
+        await new Promise(r => setTimeout(r, 100));
       }
-    });
 
-    // Initial setup
-    this.updateCounts();
-    this.ui.startLoadingSequence();
-    
-    // Initialize draggable panels
-    initializeDraggablePanels();
+      const { UIManager, initializeDraggablePanels } = await import('./ui.js');
+
+      this.ui = new UIManager({
+        onSearch: (query) => this.handleSearch(query),
+        onFilter: (category) => this.handleFilter(category),
+        onMotionToggle: (enabled) => this.scene.setMotionReduced(enabled),
+        onFocusToggle: (enabled) => console.log('Focus mode:', enabled),
+        onContrastToggle: (enabled) => console.log('High contrast:', enabled),
+        onTourStart: () => this.startTour(),
+        onExport: () => this.exportView(),
+        onReset: () => {
+          this.scene.resetCamera();
+          if (this.ui) this.ui.hideRepoInfo();
+        },
+        onBookmarkToggle: () => this.toggleBookmark(),
+        onBookmarkClick: (repoName) => {
+          this.scene.flyToRepository(repoName);
+          const repo = repositories.find(r => r.name === repoName);
+          if (repo && this.ui) this.ui.showRepoInfo(repo, true);
+        },
+        onBookmarkRemove: (repoName) => this.removeBookmark(repoName),
+        onCloseInfo: () => {
+          this.scene.selectedRepo = null;
+        }
+      });
+
+      // Initial setup
+      this.updateCounts();
+      this.ui.startLoadingSequence();
+      
+      // Initialize draggable panels
+      initializeDraggablePanels();
+    } catch (error) {
+      console.error('Critical error during initialization:', error);
+      throw error;
+    }
   }
 
   handleSearch(query) {
