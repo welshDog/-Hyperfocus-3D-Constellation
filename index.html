@@ -63,13 +63,22 @@
                     <span class="control-label">🎯 Focus Mode</span>
                 </label>
                 <label class="control-item">
-                    <input type="checkbox" id="audio-enabled">
+                    <input type="checkbox" id="audio-enabled" checked>
                     <span class="control-label">🔊 Audio</span>
                 </label>
                 <label class="control-item">
                     <input type="checkbox" id="high-contrast">
                     <span class="control-label">🌓 Contrast</span>
                 </label>
+            </div>
+            
+            <!-- Volume Controls -->
+            <div class="volume-controls">
+                <label for="ambient-volume">🎵 Ambient: <span id="ambient-value">20</span>%</label>
+                <input type="range" id="ambient-volume" min="0" max="100" value="20" class="volume-slider">
+                
+                <label for="effects-volume">🔊 Effects: <span id="effects-value">40</span>%</label>
+                <input type="range" id="effects-volume" min="0" max="100" value="40" class="volume-slider">
             </div>
         </div>
 
@@ -142,145 +151,8 @@
         </div>
     </div>
 
-    <script>
-        // GitHub API Client
-        class GitHubAPI {
-            static async fetchAllRepos(username) {
-                const repos = [];
-                let page = 1;
-                let hasMore = true;
-
-                while (hasMore) {
-                    try {
-                        const response = await fetch(
-                            `https://api.github.com/users/${username}/repos?page=${page}&per_page=100&sort=updated&direction=desc`
-                        );
-                        const data = await response.json();
-
-                        if (data.length === 0) {
-                            hasMore = false;
-                        } else {
-                            repos.push(...data);
-                            page++;
-                            document.getElementById('loading-status').textContent = `Loaded ${repos.length} repositories...`;
-                        }
-                    } catch (error) {
-                        console.error('GitHub API error:', error);
-                        hasMore = false;
-                    }
-                }
-
-                return repos;
-            }
-        }
-
-        // Main App State
-        const appState = {
-            repos: [],
-            particles: [],
-            selectedRepo: null,
-            filteredRepos: [],
-            languages: new Set(),
-            bookmarks: JSON.parse(localStorage.getItem('bookmarks') || '[]'),
-        };
-
-        // Initialize App
-        async function init() {
-            try {
-                // Fetch all repos
-                const repos = await GitHubAPI.fetchAllRepos('welshDog');
-                appState.repos = repos;
-                
-                // Extract languages
-                repos.forEach(repo => {
-                    if (repo.language) appState.languages.add(repo.language);
-                });
-
-                // Create filter buttons
-                const filterContainer = document.getElementById('languageFilters');
-                Array.from(appState.languages).sort().forEach(lang => {
-                    const btn = document.createElement('button');
-                    btn.className = 'filter-btn';
-                    btn.dataset.language = lang;
-                    btn.textContent = `${lang} (${repos.filter(r => r.language === lang).length})`;
-                    btn.addEventListener('click', () => filterByLanguage(lang));
-                    filterContainer.appendChild(btn);
-                });
-
-                // Hide loading screen
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('repo-count').textContent = `Repos: ${repos.length}`;
-
-                // Start visualization
-                initVisualization(repos);
-
-            } catch (error) {
-                console.error('Init error:', error);
-                document.getElementById('loading-status').textContent = '❌ Error loading repositories';
-            }
-        }
-
-        function filterByLanguage(language) {
-            if (language === 'all') {
-                appState.filteredRepos = appState.repos;
-            } else {
-                appState.filteredRepos = appState.repos.filter(r => r.language === language);
-            }
-            console.log(`Filtered to ${appState.filteredRepos.length} ${language} repositories`);
-        }
-
-        function initVisualization(repos) {
-            // This would integrate with your Three.js or canvas setup
-            // For now, setup interactive elements
-            document.getElementById('reset-view').addEventListener('click', resetView);
-            document.getElementById('close-info').addEventListener('click', closeInfo);
-            document.getElementById('toggle-bookmarks').addEventListener('click', toggleBookmarks);
-            document.getElementById('bookmark-btn').addEventListener('click', toggleBookmark);
-            
-            // Search functionality
-            document.getElementById('search-input').addEventListener('input', handleSearch);
-        }
-
-        function resetView() {
-            console.log('Resetting view...');
-            // Reset Three.js camera if implemented
-        }
-
-        function closeInfo() {
-            document.getElementById('repo-info-panel').classList.add('hidden');
-            appState.selectedRepo = null;
-        }
-
-        function toggleBookmarks() {
-            const panel = document.getElementById('bookmarks-panel');
-            panel.classList.toggle('hidden');
-        }
-
-        function toggleBookmark() {
-            if (!appState.selectedRepo) return;
-            const idx = appState.bookmarks.findIndex(b => b.id === appState.selectedRepo.id);
-            if (idx > -1) {
-                appState.bookmarks.splice(idx, 1);
-                document.getElementById('bookmark-icon').textContent = '🔖';
-            } else {
-                appState.bookmarks.push(appState.selectedRepo);
-                document.getElementById('bookmark-icon').textContent = '✅';
-            }
-            localStorage.setItem('bookmarks', JSON.stringify(appState.bookmarks));
-        }
-
-        function handleSearch(e) {
-            const query = e.target.value.toLowerCase();
-            const filtered = appState.repos.filter(r => 
-                r.name.toLowerCase().includes(query) ||
-                (r.description && r.description.toLowerCase().includes(query))
-            );
-            console.log(`Found ${filtered.length} matching repositories`);
-        }
-
-        // Start
-        init();
-    </script>
+    <!-- Audio Engine -->
+    <script src="audio.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
