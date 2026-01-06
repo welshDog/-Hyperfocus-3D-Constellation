@@ -1,3 +1,27 @@
+# 🏗️ Architecture Overview
+
+## System Design
+
+### Core Components
+- **ConstellationApp** - Application coordinator
+- **UIManager** - User interface controller
+- **GalaxyScene** - 3D rendering engine
+
+### API Resilience
+- Primary: GitHub REST API (live data)
+- Fallback: `data/repos.json` (cached snapshot)
+- Auto-detection of rate limits (403 responses)
+
+### Performance Strategy
+- Lazy particle rendering
+- Intersection Observer for visibility
+- RequestAnimationFrame throttling
+- WebGL optimization for 60fps target
+
+Built for neurodivergent minds with accessibility-first design.
+
+---
+
 # 🏑 Architecture Guide
 
 ## Overview
@@ -198,218 +222,4 @@ Result:           Digital error sound
                   │
                   └─ appState.particles[]
                      scene.add(mesh)
-          │
-          └─ UI
-              filterContainer.add(filterBtn) for each language
-              document.getElementById('repos').text = count
 ```
-
----
-
-## 🔁 Interaction Flow
-
-### **User Clicks Repo**
-```
-1. onCanvasClick(event)
-   └── raycaster.setFromCamera(mouse, camera)
-   └── intersects = raycaster.intersectObjects(particles)
-   └── selectedMesh = intersects[0].object
-
-2. showRepoInfo(selectedMesh.userData.repo)
-   └── Update info panel HTML
-   └── panel.classList.add('show')
-   └── appState.selectedRepo = repo
-
-3. highlightParticle(selectedMesh)
-   └── particle.material.emissiveIntensity = 0.8
-
-4. audioEngine.selectParticle(1.1)
-   └── Play melodic sweep sound
-```
-
-### **User Filters by Language**
-```
-1. Click filter button (data-lang="Python")
-
-2. filterByLanguage('Python')
-   └── particles.forEach(p => {
-       p.visible = (p.userData.repo.language === 'Python')
-   })
-
-3. audioEngine.filterSweep('Python')
-   └── Play language-specific pitch click
-
-4. UI updates
-   └── Filter button.classList.add('active')
-   └── Repo count updates
-```
-
-### **User Searches**
-```
-1. Input event on search box
-
-2. particles.forEach(p => {
-     match = p.userData.repo.name.includes(query) OR
-             p.userData.repo.description.includes(query)
-     p.visible = match
-   })
-
-3. Every 3rd character: audioEngine.click(0.6)
-
-4. UI updates
-   └── document.getElementById('repos').text = visibleCount
-```
-
----
-
-## 📌 State Management
-
-### **appState Object**
-
-```javascript
-const appState = {
-  repos: [],                  // All 68 repos from GitHub
-  particles: [],              // THREE.Mesh objects
-  selectedRepo: null,         // Currently selected repo
-  raycaster: new THREE.Raycaster(),
-  mouse: new THREE.Vector2(),
-  languages: new Set(),       // Unique languages
-};
-```
-
-**No external state management** (Redux, Vuex, etc.)
-- Simpler
-- Faster
-- No build required
-- Direct DOM manipulation via classList
-
----
-
-## 📄 Performance Considerations
-
-### **Rendering**
-- **68 particles**: Each has geometry + material + animation
-- **Lights**: 4 total (1 ambient, 1 directional, 2 point)
-- **Stars**: 1500 points (low poly, performant)
-- **Target**: 60 FPS on mid-range devices
-
-### **Optimizations Done**
-- ✅ Icosahedron geometry (only 16 subdivisions, not 64)
-- ✅ Material reuse (not creating new material per particle)
-- ✅ Particle pooling (create once, update in loop)
-- ✅ No particle addition/removal in animation loop
-- ✅ Fog to hide far objects (less rendering)
-
-### **Potential Future Optimizations**
-- InstancedGeometry (if scaling to 1000+ repos)
-- WebGPU renderer (when stable)
-- Compute shaders for animation
-- LOD (Level of Detail) for distant particles
-
----
-
-## 🖫 Error Handling
-
-### **GitHub API Errors**
-```javascript
-try {
-  const repos = await fetchAllRepos();
-  // Process repos
-} catch (error) {
-  console.error('GitHub API error:', error);
-  updateStatus('❌ Error loading repositories');
-  audioEngine.error();
-}
-```
-
-### **Audio Context Errors**
-```javascript
-// Browser may require user gesture to start audio
-// Solution: auto-resume on first click
-document.addEventListener('click', () => {
-  if (audioEngine.audioContext.state === 'suspended') {
-    audioEngine.audioContext.resume();
-  }
-});
-```
-
----
-
-## 🔍 Debugging Tips
-
-### **Three.js Inspector**
-```javascript
-// In console, pause animation to inspect scene
-controls.autoRotate = false;
-renderer.render(scene, camera); // Manual render
-```
-
-### **Audio Analyzer**
-```javascript
-// Check if audio is playing (check volume levels in devtools)
-const analyser = audioEngine.audioContext.createAnalyser();
-audioEngine.masterGain.connect(analyser);
-// Inspect analyser.getByteFrequencyData()
-```
-
-### **Performance Profiling**
-```javascript
-// DevTools > Performance tab
-// Record 1 frame animation cycle
-// Look for:
-// - geometry.setFromPoints (should be minimal)
-// - renderer.render (target <16ms for 60 FPS)
-// - GC pauses (should be none)
-```
-
----
-
-## 🌝 Browser Compatibility
-
-| Feature | Chrome | Firefox | Safari | Edge |
-|---------|--------|---------|--------|------|
-| WebGL 2.0 | ✅ | ✅ | ✅ | ✅ |
-| Web Audio API | ✅ | ✅ | ✅ | ✅ |
-| Fetch API | ✅ | ✅ | ✅ | ✅ |
-| ES6+ | ✅ | ✅ | ✅ | ✅ |
-| CSS Grid | ✅ | ✅ | ✅ | ✅ |
-
-**Minimum versions**: Chrome 90+, Firefox 88+, Safari 15+
-
----
-
-## 📋 Future Architecture Ideas
-
-### **Phase 2: Data Persistence**
-- Save user's bookmarks to localStorage
-- Cache repo data (reuse in offline mode)
-- Store filter preferences
-
-### **Phase 3: Advanced Visuals**
-- Particle trails (history of movement)
-- Connection lines between repos (same author, same language)
-- Heatmap overlay (activity, stars over time)
-- Custom particle shapes per language
-
-### **Phase 4: Multiplayer**
-- WebSocket for shared galaxy view
-- Real-time user cursors
-- Collaborative exploration
-
-### **Phase 5: Mobile App**
-- React Native or Flutter version
-- Touch controls (pinch zoom, swipe)
-- Mobile-optimized UI
-
----
-
-## 📚 References
-
-- **Three.js Documentation**: https://threejs.org/docs/
-- **Web Audio API**: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
-- **OrbitControls**: https://github.com/mrdoob/three.js/blob/master/examples/jsm/controls/OrbitControls.js
-- **GitHub REST API**: https://docs.github.com/en/rest
-
----
-
-**Questions?** See [`README.md`](../README.md) or [`accessibility.md`](./accessibility.md)
