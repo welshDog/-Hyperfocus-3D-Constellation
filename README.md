@@ -59,8 +59,8 @@ This isn't just another GitHub showcase—it's a **living 3D galaxy** where your
 
 ### 1. **Clone the Universe**
 ```bash
-git clone https://github.com/welshDog/hyperfocus-3d-constellation.git
-cd hyperfocus-3d-constellation
+git clone https://github.com/welshDog/Hyperfocus-3D-Constellation.git
+cd Hyperfocus-3D-Constellation
 ```
 
 ### 2. **Launch into Space**

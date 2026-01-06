@@ -1,8 +1,4 @@
-# Let's prepare the complete repository data for the 3D constellation
-import json
-
-# Repository data from the GitHub analysis
-repositories = [
+[
     {
         "name": "-MIND-VAULT-ULTIMATE-GAME",
         "category": "Creative",
@@ -204,32 +200,3 @@ repositories = [
         "githubUrl": "https://github.com/welshDog/tHe-HYPER-dOoK-STorY"
     }
 ]
-
-# Convert to JSON for the application
-repo_data = json.dumps(repositories, indent=2)
-print("Repository data prepared for 3D Constellation:")
-print(f"Total repositories: {len(repositories)}")
-
-# Category breakdown
-categories = {}
-for repo in repositories:
-    cat = repo['category']
-    if cat not in categories:
-        categories[cat] = 0
-    categories[cat] += 1
-
-print("\nCategory breakdown:")
-for cat, count in categories.items():
-    print(f"  {cat}: {count} repos")
-
-print("\n" + "="*50)
-print("JSON DATA FOR APPLICATION:")
-print("="*50)
-print(repo_data)
-
-# Save to file for API fallback
-import os
-os.makedirs('data', exist_ok=True)
-with open('data/repos.json', 'w') as f:
-    f.write(repo_data)
-print("\nSaved to data/repos.json")
