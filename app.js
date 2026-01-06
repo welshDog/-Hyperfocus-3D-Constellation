@@ -8,24 +8,35 @@ const appState = {
     raycaster: new THREE.Raycaster(),
     mouse: new THREE.Vector2(),
     languages: new Set(),
+    debugMode: false,
 };
 
 let scene, camera, renderer, controls;
 let fps = 0, frameCount = 0, lastFrameTime = 0;
 
 // ======================
-// GITHUB API
+// GITHUB API WITH FALLBACK
 // ======================
 async function fetchAllRepos() {
     const repos = [];
     let page = 1;
     let hasMore = true;
+    let apiLimitHit = false;
 
     while (hasMore) {
         try {
             const response = await fetch(
                 `https://api.github.com/users/welshDog/repos?page=${page}&per_page=100&sort=updated`
             );
+            
+            // Check rate limit
+            if (response.status === 403) {
+                console.warn('GitHub API rate limited. Using fallback...');
+                apiLimitHit = true;
+                hasMore = false;
+                break;
+            }
+            
             const data = await response.json();
 
             if (data.length === 0) {
@@ -33,16 +44,40 @@ async function fetchAllRepos() {
             } else {
                 repos.push(...data);
                 page++;
-                updateProgress((repos.length / 68) * 100);
+                updateProgress((repos.length / 100) * 100);
                 updateStatus(`Loaded ${repos.length} repositories...`);
             }
         } catch (error) {
             console.error('GitHub API error:', error);
+            apiLimitHit = true;
             hasMore = false;
         }
     }
 
+    // If API failed, use fallback
+    if (apiLimitHit || repos.length === 0) {
+        console.warn('API failed or returned 0 repos. Attempting fallback...');
+        return await fetchFallbackRepos();
+    }
+
     return repos;
+}
+
+// Fallback: Try to load cached repos.json from repo
+async function fetchFallbackRepos() {
+    try {
+        const response = await fetch('./data/repos.json');
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`Using fallback: Loaded ${data.length} repos from cache`);
+            updateStatus(`Using cached data (${data.length} repos)`);
+            return data;
+        }
+    } catch (error) {
+        console.warn('Fallback also failed:', error);
+    }
+    // Return empty array - UI will handle gracefully
+    return [];
 }
 
 // ======================
@@ -218,7 +253,7 @@ function showRepoInfo(repo) {
         <span class="tag">${repo.language || 'Unknown'}</span>
         <span class="tag">⭐ ${repo.stargazers_count}</span>
         <span class="tag">🐛 ${repo.open_issues_count}</span>
-        <span class="tag">${repo.private ? '🔒 Private' : '🌐 Public'}</span>
+        <span class="tag">${repo.private ? '🔐 Private' : '🌐 Public'}</span>
     `;
     
     document.getElementById('repo-link').href = repo.html_url;
@@ -249,6 +284,14 @@ function updateProgress(percent) {
 
 function updateStatus(message) {
     document.getElementById('loading-status').textContent = message;
+}
+
+function showDebugInfo(repos) {
+    const debugEl = document.getElementById('debug-info');
+    if (debugEl) {
+        debugEl.textContent = `[DEBUG] Repos loaded: ${repos.length} | Particles: ${appState.particles.length}`;
+        debugEl.style.display = 'block';
+    }
 }
 
 // ======================
@@ -330,6 +373,17 @@ function setupEventListeners() {
         controls.autoRotate = !e.target.checked;
     });
 
+    // Debug toggle (hidden by default)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'd' && e.ctrlKey) {
+            appState.debugMode = !appState.debugMode;
+            const debugEl = document.getElementById('debug-info');
+            if (debugEl) {
+                debugEl.style.display = appState.debugMode ? 'block' : 'none';
+            }
+        }
+    });
+
     // Window resize
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -392,6 +446,11 @@ async function init() {
         // Fetch repos
         const repos = await fetchAllRepos();
         appState.repos = repos;
+
+        // Show debug info if enabled
+        if (appState.debugMode) {
+            showDebugInfo(repos);
+        }
 
         // Extract languages
         repos.forEach(repo => {
