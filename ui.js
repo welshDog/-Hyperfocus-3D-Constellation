@@ -263,42 +263,41 @@ export class UIManager {
 
   showRepoInfo(repo, isBookmarked) {
     console.log('Showing info for:', repo.name);
-    const panel = document.getElementById('repo-info-panel');
+    const panel = document.getElementById('info-panel');
     
     document.getElementById('repo-name').textContent = repo.name;
-    document.getElementById('repo-category').textContent = repo.category;
     document.getElementById('repo-language').textContent = repo.language;
-    document.getElementById('repo-stars').textContent = `⭐ ${repo.stars}`;
+    document.getElementById('repo-stars').textContent = repo.stars;
     document.getElementById('repo-description').textContent = repo.description;
-    document.getElementById('repo-updated').textContent = `Updated: ${repo.updated}`;
+    document.getElementById('repo-updated').textContent = repo.updated;
     
     const statusEl = document.getElementById('repo-status');
     statusEl.textContent = repo.status;
-    statusEl.className = `status status--${repo.status === 'active' ? 'success' : repo.status === 'development' ? 'warning' : 'info'}`;
+    statusEl.className = `status status--${repo.status === 'Active' ? 'success' : repo.status === 'Development' ? 'warning' : 'info'}`;
     
-    const githubLink = document.getElementById('repo-github-link');
-    githubLink.href = repo.githubUrl;
+    const githubLink = document.getElementById('repo-link');
+    if (githubLink) githubLink.href = repo.githubUrl || '#';
     
     // Update bookmark button
     this.updateBookmarkButton(isBookmarked);
     
-    panel.classList.remove('hidden');
+    if (panel) panel.classList.remove('hidden');
   }
 
   updateBookmarkButton(isBookmarked) {
     const bookmarkBtn = document.getElementById('bookmark-btn');
-    const bookmarkIcon = document.getElementById('bookmark-icon');
+    if (!bookmarkBtn) return;
+    
     if (isBookmarked) {
-      bookmarkIcon.textContent = '📌';
-      bookmarkBtn.querySelector('span').innerHTML = '📌 Bookmarked';
+      bookmarkBtn.querySelector('span').innerHTML = '⭐ Bookmarked';
     } else {
-      bookmarkIcon.textContent = '🔖';
-      bookmarkBtn.querySelector('span').innerHTML = '🔖 Bookmark';
+      bookmarkBtn.querySelector('span').innerHTML = '⭐ Bookmark';
     }
   }
 
   hideRepoInfo() {
-    document.getElementById('repo-info-panel').classList.add('hidden');
+    const panel = document.getElementById('info-panel');
+    if (panel) panel.classList.add('hidden');
     if (this.callbacks.onCloseInfo) this.callbacks.onCloseInfo();
   }
 
@@ -353,6 +352,8 @@ export class UIManager {
     const notification = document.getElementById('achievement-notification');
     const text = document.getElementById('achievement-text');
     
+    if (!notification || !text) return;
+    
     text.textContent = `${title}: ${description}`;
     notification.classList.remove('hidden');
     
@@ -382,11 +383,13 @@ export class UIManager {
 
   toggleBookmarksPanel() {
     const panel = document.getElementById('bookmarks-panel');
-    panel.classList.toggle('hidden');
+    if (panel) panel.classList.toggle('hidden');
   }
 
   updateBookmarksList(bookmarkedRepos, allRepos) {
     const bookmarksList = document.getElementById('bookmarks-list');
+    if (!bookmarksList) return;
+    
     bookmarksList.innerHTML = '';
     
     bookmarkedRepos.forEach(repoName => {
