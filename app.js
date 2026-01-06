@@ -191,4 +191,10 @@ class ConstellationApp {
 }
 
 // Initialize the application
-new ConstellationApp();
+try {
+  new ConstellationApp();
+} catch (err) {
+  console.error('Fatal initialization error:', err);
+  const status = document.getElementById('loading-status');
+  if (status) status.innerHTML = `<span style="color: #ff4444">Fatal Error: ${err.message}</span>`;
+}

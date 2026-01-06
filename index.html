@@ -185,6 +185,20 @@
         </div>
     </div>
 
+    <!-- Global Error Handler -->
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Global Error:', e);
+        const status = document.getElementById('loading-status');
+        if (status) status.innerHTML = `<span style="color: #ff4444">Error: ${e.message}</span>`;
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled Rejection:', e.reason);
+        const status = document.getElementById('loading-status');
+        if (status) status.innerHTML = `<span style="color: #ff4444">Error: ${e.reason.message || e.reason}</span>`;
+      });
+    </script>
+
     <!-- Core Application Logic -->
     <script type="module" defer src="app.js"></script>
     
