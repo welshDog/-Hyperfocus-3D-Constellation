@@ -15,170 +15,148 @@
     </script>
 </head>
 <body>
-    <!-- 3D Canvas Container -->
-    <div id="galaxy-container">
+    <!-- Canvas Container -->
+    <div id="canvas-container">
         <canvas id="galaxy-canvas"></canvas>
     </div>
 
-    <!-- Main UI Overlay -->
+    <!-- UI Overlay -->
     <div id="ui-overlay">
-        <!-- Top Navigation Bar -->
-        <nav class="nav-bar glass-panel">
+        <!-- Navigation Bar -->
+        <div class="nav-bar glass-panel">
             <div class="nav-content">
                 <h1 class="constellation-title">
                     <span class="title-icon">✨</span>
                     Hyperfocus Constellation
                 </h1>
-                
-                <!-- Search -->
                 <div class="search-container">
-                    <input type="text" id="search-input" class="search-input" placeholder="🔍 Search repositories..." autocomplete="off">
-                    <button id="voice-search-btn" class="voice-btn" title="Voice Search">🎤</button>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search repositories..." aria-label="Search repositories">
+                    <button class="voice-btn" id="voice-search-btn" aria-label="Voice search">🎤</button>
                 </div>
-
-                <!-- Performance Metrics -->
                 <div class="performance-display">
-                    <span id="fps-counter">FPS: --</span>
-                    <span id="render-time">Render: --ms</span>
+                    <span id="fps-counter">FPS: 60</span>
+                    <span id="node-count">Nodes: 0</span>
                 </div>
             </div>
-        </nav>
+        </div>
 
-        <!-- Category Filter Panel -->
+        <!-- Filter Panel (Top Left) -->
         <div class="filter-panel glass-panel">
-            <h3>Categories</h3>
+            <h3>Category Filters</h3>
             <div class="category-filters">
                 <button class="filter-btn active" data-category="all">
-                    <span class="filter-icon">🌟</span>
-                    All (<span id="count-all">20</span>)
+                    <span class="filter-icon">🌌</span> All Sectors
                 </button>
                 <button class="filter-btn" data-category="Core Empire">
-                    <span class="filter-icon">⚡</span>
-                    Core Empire (<span id="count-core">6</span>)
+                    <span class="filter-icon">🏛️</span> Core Empire
                 </button>
                 <button class="filter-btn" data-category="Creative">
-                    <span class="filter-icon">🎨</span>
-                    Creative (<span id="count-creative">5</span>)
+                    <span class="filter-icon">🎨</span> Creative
                 </button>
                 <button class="filter-btn" data-category="Dev Tools">
-                    <span class="filter-icon">🔧</span>
-                    Dev Tools (<span id="count-devtools">6</span>)
+                    <span class="filter-icon">🛠️</span> Dev Tools
                 </button>
                 <button class="filter-btn" data-category="Social">
-                    <span class="filter-icon">💬</span>
-                    Social (<span id="count-social">3</span>)
+                    <span class="filter-icon">🤝</span> Social
                 </button>
             </div>
-        </nav>
+        </div>
 
-        <!-- Accessibility Controls -->
+        <!-- Accessibility Panel (Top Right) -->
         <div class="accessibility-panel glass-panel">
-            <h3>Accessibility</h3>
+            <h3>Accessibility Controls</h3>
             <div class="control-grid">
                 <label class="control-item">
                     <input type="checkbox" id="motion-reduction">
-                    <span class="control-label">🐌 Reduce Motion</span>
+                    <span class="control-label">Reduce Motion</span>
                 </label>
                 <label class="control-item">
                     <input type="checkbox" id="focus-mode">
-                    <span class="control-label">🎯 Focus Mode</span>
-                </label>
-                <label class="control-item">
-                    <input type="checkbox" id="audio-enabled">
-                    <span class="control-label">🔊 Spatial Audio</span>
+                    <span class="control-label">Focus Mode</span>
                 </label>
                 <label class="control-item">
                     <input type="checkbox" id="high-contrast">
-                    <span class="control-label">🌓 High Contrast</span>
+                    <span class="control-label">High Contrast</span>
+                </label>
+                <label class="control-item">
+                    <input type="checkbox" id="audio-enabled">
+                    <span class="control-label">Audio FX</span>
                 </label>
             </div>
-            
-            <!-- Volume Controls -->
             <div class="volume-controls">
-                <label for="ambient-volume">🎵 Ambient: <span id="ambient-value">50</span>%</label>
-                <input type="range" id="ambient-volume" min="0" max="100" value="50" class="volume-slider">
-                
-                <label for="effects-volume">🔊 Effects: <span id="effects-value">30</span>%</label>
-                <input type="range" id="effects-volume" min="0" max="100" value="30" class="volume-slider">
+                <label for="ambient-volume">Ambient Volume: <span id="ambient-value">50</span>%</label>
+                <input type="range" id="ambient-volume" class="volume-slider" min="0" max="100" value="50">
+                <label for="effects-volume">Effects Volume: <span id="effects-value">30</span>%</label>
+                <input type="range" id="effects-volume" class="volume-slider" min="0" max="100" value="30">
             </div>
         </div>
 
-        <!-- Repository Info Panel -->
-        <div id="repo-info-panel" class="info-panel glass-panel hidden">
-            <div class="info-header">
-                <h2 id="repo-name"></h2>
-                <button id="close-info" class="close-btn">✕</button>
-            </div>
-            <div class="info-content">
-                <div class="repo-stats">
-                    <span id="repo-category" class="category-tag"></span>
-                    <span id="repo-language" class="language-tag"></span>
-                    <span id="repo-stars" class="stars-count">⭐ 0</span>
-                </div>
-                <p id="repo-description"></p>
-                <div class="repo-meta">
-                    <span id="repo-updated"></span>
-                    <span id="repo-status" class="status"></span>
-                </div>
-                <div class="repo-actions">
-                    <a id="repo-github-link" href="#" target="_blank" class="btn btn--primary">
-                        <span>🔗 View on GitHub</span>
-                    </a>
-                    <button id="bookmark-btn" class="btn btn--secondary">
-                        <span id="bookmark-icon">🔖</span> Bookmark
-                    </button>
-                    <button id="share-btn" class="btn btn--outline">
-                        📤 Share View
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mini-map -->
+        <!-- Mini-map (Bottom Right) -->
         <div class="minimap glass-panel">
             <h4>Galaxy Map</h4>
-            <canvas id="minimap-canvas" width="150" height="150"></canvas>
+            <canvas id="minimap-canvas"></canvas>
             <div class="minimap-legend">
                 <div class="legend-item">
-                    <span class="legend-color core-empire"></span>
-                    <span>Core Empire</span>
+                    <span class="legend-color" style="background: #00d4ff;"></span> Core
                 </div>
                 <div class="legend-item">
-                    <span class="legend-color creative"></span>
-                    <span>Creative</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color dev-tools"></span>
-                    <span>Dev Tools</span>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-color social"></span>
-                    <span>Social</span>
+                    <span class="legend-color" style="background: #ff00d4;"></span> Creative
                 </div>
             </div>
         </div>
 
-        <!-- Tour & Help Controls -->
+        <!-- Tour Controls (Bottom Left) -->
         <div class="tour-controls glass-panel">
-            <button id="start-tour" class="btn btn--primary">
-                🚀 Guided Tour
+            <button class="btn btn--primary" id="start-tour">
+                <span>🚀</span> Start Tour
             </button>
-            <button id="export-view" class="btn btn--secondary">
-                📸 Export View
+            <button class="btn btn--secondary" id="export-view">
+                <span>📸</span> Export View
             </button>
-            <button id="reset-view" class="btn btn--outline">
-                🏠 Reset Camera
+            <button class="btn btn--outline" id="reset-view">
+                <span>🔄</span> Reset Camera
             </button>
         </div>
 
-        <!-- Bookmarks Panel -->
-        <div id="bookmarks-panel" class="bookmarks-panel glass-panel hidden">
+        <!-- Bookmarks Panel (Bottom Center) -->
+        <div class="bookmarks-panel glass-panel hidden" id="bookmarks-panel">
             <div class="bookmarks-header">
-                <h3>🔖 Bookmarked Repositories</h3>
-                <button id="toggle-bookmarks" class="toggle-btn">📋</button>
+                <h3>⭐ Bookmarked Repos</h3>
+                <button class="toggle-btn" id="toggle-bookmarks">▼</button>
             </div>
-            <div id="bookmarks-list" class="bookmarks-list">
-                <!-- Dynamic bookmark items will be added here -->
+            <div class="bookmarks-list" id="bookmarks-list">
+                <!-- Bookmarks will be added here -->
+            </div>
+        </div>
+
+        <!-- Info Panel (Right Slide-out) -->
+        <div class="info-panel glass-panel hidden" id="info-panel">
+            <div class="info-header">
+                <h2 id="repo-name">Repository Name</h2>
+                <button class="close-btn" id="close-info">✕</button>
+            </div>
+            <div class="info-content">
+                <div class="repo-meta">
+                    <div class="repo-stats">
+                        <span class="language-tag" id="repo-language">JavaScript</span>
+                        <span class="stars-count">⭐ <span id="repo-stars">0</span></span>
+                        <span class="issues-count">🐛 <span id="repo-issues">0</span></span>
+                    </div>
+                    <div class="status">Status: <span id="repo-status">Active</span></div>
+                    <div class="updated">Updated: <span id="repo-updated">Just now</span></div>
+                </div>
+                <p id="repo-description">Repository description goes here...</p>
+                <div class="repo-actions">
+                    <a href="#" target="_blank" class="btn btn--primary" id="repo-link">
+                        <span>🔗</span> View on GitHub
+                    </a>
+                    <button class="btn btn--secondary" id="bookmark-btn">
+                        <span>⭐</span> Bookmark
+                    </button>
+                    <button class="btn btn--outline" id="share-btn">
+                        <span>📤</span> Share
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -191,10 +169,10 @@
                 <div class="spinner-ring"></div>
                 <div class="spinner-ring"></div>
             </div>
-            <h2>Initializing Constellation...</h2>
-            <p id="loading-status">Mapping repositories to stars</p>
+            <h2>Initializing Galaxy...</h2>
+            <p id="loading-status">Calibrating sensors...</p>
             <div class="loading-progress">
-                <div id="loading-bar" class="progress-bar"></div>
+                <div id="loading-bar"></div>
             </div>
         </div>
     </div>
