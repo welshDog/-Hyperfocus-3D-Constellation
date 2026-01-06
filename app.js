@@ -180,6 +180,9 @@ class GitHubAPI {
 
 // Show Repo Info
 function showRepoInfo(repo) {
+    // Play select particle sound
+    if (audioEngine) audioEngine.selectParticle(1.1);
+
     const panel = document.getElementById('repo-info-panel');
     document.getElementById('repo-name').textContent = repo.name;
     document.getElementById('repo-language').textContent = `${repo.language || 'Unknown'}`;
@@ -200,6 +203,9 @@ function showRepoInfo(repo) {
 
 // Handle Mouse Clicks
 function onMouseClick(event) {
+    // Play click sound
+    if (audioEngine) audioEngine.click(1.2);
+
     appState.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     appState.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -229,6 +235,9 @@ function highlightParticle(mesh) {
 
 // Filter by Language
 function filterByLanguage(language) {
+    // Play filter sound
+    if (audioEngine) audioEngine.filterSweep(language);
+
     appState.particles.forEach(particle => {
         if (language === 'all' || particle.userData.repo.language === language) {
             particle.visible = true;
@@ -241,13 +250,16 @@ function filterByLanguage(language) {
 // Handle Bookmark
 function toggleBookmark() {
     if (!appState.selectedRepo) return;
+
     const idx = appState.bookmarks.findIndex(b => b.id === appState.selectedRepo.id);
     if (idx > -1) {
         appState.bookmarks.splice(idx, 1);
         document.getElementById('bookmark-icon').textContent = '🔖';
+        if (audioEngine) audioEngine.glitch(0.4);
     } else {
         appState.bookmarks.push(appState.selectedRepo);
         document.getElementById('bookmark-icon').textContent = '✅';
+        if (audioEngine) audioEngine.success();
     }
     localStorage.setItem('bookmarks', JSON.stringify(appState.bookmarks));
     updateBookmarksList();
@@ -336,6 +348,14 @@ async function initApp() {
     const stars = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(stars);
 
+    // Play startup whoosh
+    if (audioEngine) {
+        audioEngine.whoosh();
+        setTimeout(() => {
+            if (audioEngine) audioEngine.notification();
+        }, 300);
+    }
+
     try {
         // Fetch repositories
         const repos = await GitHubAPI.fetchAllRepos('welshDog');
@@ -380,31 +400,54 @@ async function initApp() {
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('repo-count').textContent = `Repos: ${repos.length}`;
 
+        // Play success sound
+        if (audioEngine) audioEngine.success();
+
         // Setup event listeners
         document.getElementById('reset-view').addEventListener('click', () => {
             controls.reset();
+            if (audioEngine) audioEngine.whoosh();
         });
 
         document.getElementById('close-info').addEventListener('click', () => {
             document.getElementById('repo-info-panel').classList.add('hidden');
+            if (audioEngine) audioEngine.glitch(0.3);
         });
 
         document.getElementById('toggle-bookmarks').addEventListener('click', () => {
             document.getElementById('bookmarks-panel').classList.toggle('hidden');
+            if (audioEngine) audioEngine.click(0.8);
         });
 
         document.getElementById('bookmark-btn').addEventListener('click', toggleBookmark);
         document.addEventListener('click', onMouseClick);
 
+        // Zoom sound effects
+        let lastZoom = 0;
+        renderer.domElement.addEventListener('wheel', (e) => {
+            const now = Date.now();
+            if (now - lastZoom > 100) {
+                const direction = e.deltaY > 0 ? 'out' : 'in';
+                if (audioEngine) audioEngine.zoom(direction);
+                lastZoom = now;
+            }
+        }, { passive: false });
+
         // Search functionality
         document.getElementById('search-input').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
+            let visibleCount = 0;
             appState.particles.forEach(particle => {
                 const repo = particle.userData.repo;
                 const matches = repo.name.toLowerCase().includes(query) ||
                     (repo.description && repo.description.toLowerCase().includes(query));
                 particle.visible = matches;
+                if (matches) visibleCount++;
             });
+            // Play subtle click for search
+            if (query.length % 3 === 0 && query.length > 0 && audioEngine) {
+                audioEngine.click(0.6);
+            }
         });
 
         // Update bookmarks list
@@ -416,6 +459,7 @@ async function initApp() {
     } catch (error) {
         console.error('Init error:', error);
         document.getElementById('loading-status').textContent = '❌ Error loading repositories';
+        if (audioEngine) audioEngine.error();
     }
 }
 
