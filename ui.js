@@ -413,3 +413,64 @@ export class UIManager {
     });
   }
 }
+
+export function initializeDraggablePanels() {
+  const panels = document.querySelectorAll('.glass-panel');
+  
+  panels.forEach(panel => {
+    // Skip the main nav bar or allow it? Let's skip it for now as it's full width usually
+    if (panel.classList.contains('nav-bar')) return;
+
+    // Find a handle (header)
+    const handle = panel.querySelector('h3, h4, .info-header, .bookmarks-header') || panel;
+    
+    handle.style.cursor = 'grab';
+    
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+    
+    handle.addEventListener('mousedown', (e) => {
+      // Prevent dragging if clicking buttons/inputs inside the panel but not the handle
+      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+      
+      isDragging = true;
+      handle.style.cursor = 'grabbing';
+      
+      // Get current computed position
+      const rect = panel.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+      startX = e.clientX;
+      startY = e.clientY;
+      
+      // Switch to absolute positioning with explicit pixel values
+      // This handles panels that were positioned with right/bottom/transforms
+      panel.style.position = 'fixed'; // Use fixed to stay relative to viewport
+      panel.style.left = `${initialLeft}px`;
+      panel.style.top = `${initialTop}px`;
+      panel.style.right = 'auto';
+      panel.style.bottom = 'auto';
+      panel.style.transform = 'none';
+      panel.style.margin = '0';
+      
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      
+      panel.style.left = `${initialLeft + dx}px`;
+      panel.style.top = `${initialTop + dy}px`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        handle.style.cursor = 'grab';
+      }
+    });
+  });
+}

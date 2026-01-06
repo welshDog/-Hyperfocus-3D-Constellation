@@ -1,6 +1,6 @@
 import { repositories } from './data.js';
 import { GalaxyScene } from './scene.js';
-import { UIManager } from './ui.js';
+import { UIManager, initializeDraggablePanels } from './ui.js';
 
 class ConstellationApp {
   constructor() {
@@ -44,6 +44,9 @@ class ConstellationApp {
     // Initial setup
     this.updateCounts();
     this.ui.startLoadingSequence();
+    
+    // Initialize draggable panels
+    initializeDraggablePanels();
   }
 
   handleSearch(query) {
