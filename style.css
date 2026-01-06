@@ -900,10 +900,24 @@ select.form-control {
 /* Filter Panel */
 .filter-panel {
   position: absolute;
-  top: 120px;
+  top: 100px;
   left: var(--space-20);
   padding: var(--space-16);
   min-width: 280px;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.filter-panel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .filter-panel h3 {
@@ -954,10 +968,24 @@ select.form-control {
 /* Accessibility Panel */
 .accessibility-panel {
   position: absolute;
-  top: 120px;
+  top: 100px;
   right: var(--space-20);
   padding: var(--space-16);
   min-width: 300px;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.accessibility-panel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .accessibility-panel h3 {
@@ -1181,12 +1209,6 @@ select.form-control {
   .minimap { display: none; } /* Hide on very small screens */
 }
 
-.filter-panel { border: 3px solid red !important; }
-.accessibility-panel { border: 3px solid blue !important; }
-.minimap { border: 3px solid green !important; }
-.tour-controls { border: 3px solid yellow !important; }
-
-
 /* Mini-map */
 .minimap {
   position: absolute;
@@ -1194,6 +1216,7 @@ select.form-control {
   right: var(--space-20);
   padding: var(--space-16);
   width: 200px;
+  z-index: 20;
 }
 
 .minimap h4 {
@@ -1224,38 +1247,6 @@ select.form-control {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.filter-panel.glass-panel {
-  position: absolute !important;
-  top: var(--space-20) !important;
-  left: var(--space-20) !important;
-  bottom: auto !important;
-  right: auto !important;
-}
-
-.accessibility-panel.glass-panel {
-  position: absolute !important;
-  bottom: var(--space-20) !important;
-  right: var(--space-20) !important;
-  top: auto !important;
-  left: auto !important;
-}
-
-.minimap {
-  position: absolute !important;
-  top: var(--space-20) !important;
-  right: var(--space-20) !important;
-  bottom: auto !important;
-  left: auto !important;
-}
-
-.tour-controls {
-  position: absolute !important;
-  bottom: var(--space-20) !important;
-  left: var(--space-20) !important;
-  top: auto !important;
-  right: auto !important;
-}
-
 .legend-color {
   width: 12px;
   height: 12px;
@@ -1277,22 +1268,23 @@ select.form-control {
   flex-direction: column;
   gap: var(--space-12);
   width: 200px;
+  z-index: 20;
 }
 
 /* Bookmarks Panel */
 .bookmarks-panel {
   position: absolute;
-  top: 50%;
-  left: var(--space-20);
-  transform: translateY(-50%);
-  width: 300px;
-  max-height: 400px;
-  transition: all var(--duration-normal) var(--ease-standard);
+  bottom: var(--space-20);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  max-height: 300px;
+  z-index: 30;
 }
 
 .bookmarks-panel.hidden {
   opacity: 0;
-  transform: translateY(-50%) translateX(-100%);
+  transform: translateX(-50%) translateY(100%);
   pointer-events: none;
 }
 

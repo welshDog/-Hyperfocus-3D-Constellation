@@ -1,0 +1,54 @@
+{
+  "tasks": {
+    "1": {
+      "id": "1",
+      "title": "Refactor to ES Modules",
+      "description": "Switch from script tags to Import Maps for better dependency management",
+      "is_urgent": true,
+      "is_important": true,
+      "estimated_time": 30,
+      "completed": true,
+      "repo": "",
+      "issue_number": 0
+    },
+    "2": {
+      "id": "2",
+      "title": "Upgrade Three.js to r160+",
+      "description": "Update from r128 to latest version via CDN",
+      "is_urgent": true,
+      "is_important": true,
+      "estimated_time": 45,
+      "completed": true,
+      "repo": "",
+      "issue_number": 0
+    },
+    "3": {
+      "id": "3",
+      "title": "Modularize app.js",
+      "description": "Split monolithic app.js into scene, ui, and logic modules",
+      "is_urgent": false,
+      "is_important": true,
+      "estimated_time": 60,
+      "completed": true,
+      "repo": "",
+      "issue_number": 0
+    },
+    "4": {
+      "id": "4",
+      "title": "Fix UI Overlap",
+      "description": "Remove debug CSS overrides causing panel collision",
+      "is_urgent": true,
+      "is_important": true,
+      "estimated_time": 15,
+      "completed": true,
+      "repo": "",
+      "issue_number": 0
+    }
+  },
+  "quadrants": {
+    "q1": ["1", "2", "4"],
+    "q2": ["3"],
+    "q3": [],
+    "q4": []
+  }
+}
