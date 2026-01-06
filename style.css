@@ -825,3 +825,11 @@ html, body {
         border-radius: 12px 12px 0 0;
     }
 }
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
