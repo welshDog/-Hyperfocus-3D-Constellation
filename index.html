@@ -317,6 +317,24 @@
             accent-color: var(--color-primary);
         }
 
+        /* Debug Info */
+        #debug-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            color: var(--color-text-secondary);
+            display: none;
+            z-index: 5;
+            max-width: 300px;
+            word-break: break-word;
+        }
+
         /* Loading Screen */
         #loading {
             position: fixed;
@@ -436,7 +454,7 @@
         <div class="top-bar glass-panel">
             <h1>✨ Hyperfocus Constellation</h1>
             <div class="search-box">
-                <input type="text" id="search" placeholder="🔍 Search 68 repositories..." />
+                <input type="text" id="search" placeholder="🔍 Search repositories..." />
             </div>
             <div class="stats">
                 <span class="stat" id="fps">FPS: --</span>
@@ -475,7 +493,7 @@
                 </label>
                 <label class="control-item">
                     <input type="checkbox" id="motion-reduce" />
-                    <span>🐌 Reduce Motion</span>
+                    <span>🐘 Reduce Motion</span>
                 </label>
                 <div class="volume-control">
                     <label>🎵 Volume: <span id="volume-value">40</span>%</label>
@@ -483,6 +501,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Debug Info (Ctrl+D to toggle) -->
+        <div id="debug-info"></div>
     </div>
 
     <!-- Loading Screen -->
@@ -490,7 +511,7 @@
         <div class="loading-content">
             <div class="spinner"></div>
             <h2>Initializing Constellation...</h2>
-            <p id="loading-status">Fetching 68 repositories from GitHub</p>
+            <p id="loading-status">Fetching repositories from GitHub</p>
             <div class="progress-bar">
                 <div id="progress-fill"></div>
             </div>
