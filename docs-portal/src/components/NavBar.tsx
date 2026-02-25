@@ -1,4 +1,4 @@
-import { BookOpen, FlaskConical, Layout, LibraryBig, Rocket } from 'lucide-react';
+import { Activity, BookOpen, FlaskConical, Layout, LibraryBig, Rocket } from 'lucide-react';
 
 type NavItem = {
   id: string;
@@ -11,7 +11,8 @@ const items: NavItem[] = [
   { id: 'style', label: 'Style Guide', icon: <LibraryBig className="w-4 h-4" /> },
   { id: 'api', label: 'API Docs', icon: <BookOpen className="w-4 h-4" /> },
   { id: 'tutorials', label: 'Tutorials', icon: <Rocket className="w-4 h-4" /> },
-  { id: 'playground', label: 'Playground', icon: <FlaskConical className="w-4 h-4" /> }
+  { id: 'playground', label: 'Playground', icon: <FlaskConical className="w-4 h-4" /> },
+  { id: 'monitoring', label: 'Monitoring', icon: <Activity className="w-4 h-4" /> }
 ];
 
 export function NavBar({

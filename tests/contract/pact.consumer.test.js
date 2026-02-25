@@ -1,6 +1,11 @@
 import { Pact } from '@pact-foundation/pact';
 import path from 'path';
-import { validateRepositories } from '../../schema-validator.js';
+import fetch from 'node-fetch';
+import { TextDecoder, TextEncoder } from 'util';
+import { validateGatewayResponse } from '../../schema-validator.js';
+
+global.TextDecoder = TextDecoder;
+global.TextEncoder = TextEncoder;
 
 describe('Gateway Contract', () => {
   const pact = new Pact({
@@ -20,8 +25,7 @@ describe('Gateway Contract', () => {
       uponReceiving: 'a request for repositories',
       withRequest: {
         method: 'GET',
-        path: '/api/v1/repositories',
-        headers: { 'Content-Type': 'application/json' },
+        path: '/api/v1/repositories'
       },
       willRespondWith: {
         status: 200,
@@ -48,8 +52,10 @@ describe('Gateway Contract', () => {
 
     const res = await fetch(`http://localhost:${pact.opts.port}/api/v1/repositories`);
     const json = await res.json();
-    const items = Array.isArray(json?.items) ? json.items : json;
-    const validation = validateRepositories(items);
+    const payload = Array.isArray(json)
+      ? { items: json, page: 1, perPage: json.length, total: json.length }
+      : json;
+    const validation = validateGatewayResponse(payload);
     expect(validation.ok).toBe(true);
     await pact.verify();
   });

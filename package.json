@@ -5,7 +5,7 @@
   "description": "The world's most advanced 3D repository visualization designed for neurodivergent minds",
   "main": "app.js",
   "scripts": {
-    "dev": "http-server -p 8080 -c-1",
+    "dev": "http-server -p 8090 -c-1",
     "postinstall": "npm run cache:cdn",
     "cache:cdn": "node tools/cache-cdn.cjs",
     "build:lighthouse": "lighthouse https://welshdog.github.io/-Hyperfocus-3D-Constellation/ --output=json --output-path=./reports/lighthouse.json",
@@ -59,6 +59,8 @@
     "@playwright/test": "^1.40.1",
     "@pact-foundation/pact": "^12.1.1",
     "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "node-fetch": "^3.3.2",
     "wait-on": "^7.2.0",
     "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -73,7 +75,7 @@
     "testEnvironment": "jsdom",
     "transform": {},
     "testMatch": [
-      "**/tests/*.test.js"
+      "**/tests/**/*.test.js"
     ],
     "setupFilesAfterEnv": [
       "@testing-library/jest-dom"

@@ -1,11 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import SwaggerUI from 'swagger-ui-react';
-import 'swagger-ui-react/swagger-ui.css';
 import { NavBar } from './components/NavBar';
+import { HomePage } from './pages/HomePage';
+import { StyleGuidePage } from './pages/StyleGuidePage';
+import { ApiDocsPage } from './pages/ApiDocsPage';
+import { TutorialsPage } from './pages/TutorialsPage';
+import { PlaygroundPage } from './pages/PlaygroundPage';
+import { MonitoringPage } from './pages/MonitoringPage';
 
 function App() {
   const [version] = useState('v1');
-  const [tab, setTab] = useState('api');
+  const [tab, setTab] = useState('home');
   const specUrl = useMemo(() => '/openapi.json', []);
 
   return (
@@ -19,11 +23,12 @@ function App() {
           <span className="mr-2">API Version:</span>
           <span className="px-2 py-1 rounded bg-primary text-black">{version}</span>
         </div>
-        {tab === 'api' && <SwaggerUI url={specUrl} />}
-        {tab === 'style' && <div className="bg-surface p-4 rounded">Style guide coming soon</div>}
-        {tab === 'tutorials' && <div className="bg-surface p-4 rounded">Onboarding tutorials coming soon</div>}
-        {tab === 'playground' && <div className="bg-surface p-4 rounded">API playground coming soon</div>}
-        {tab === 'home' && <div className="bg-surface p-4 rounded">Overview</div>}
+        {tab === 'home' && <HomePage />}
+        {tab === 'style' && <StyleGuidePage />}
+        {tab === 'api' && <ApiDocsPage specUrl={specUrl} />}
+        {tab === 'tutorials' && <TutorialsPage />}
+        {tab === 'playground' && <PlaygroundPage />}
+        {tab === 'monitoring' && <MonitoringPage />}
       </main>
     </div>
   );

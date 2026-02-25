@@ -1,4 +1,5 @@
 import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
 const repositorySchema = {
   type: 'object',
@@ -20,9 +21,25 @@ const repositorySchema = {
 };
 
 const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
 const validate = ajv.compile({ type: 'array', items: repositorySchema });
+const validateGateway = ajv.compile({
+  type: 'object',
+  required: ['items', 'page', 'perPage', 'total'],
+  properties: {
+    items: { type: 'array', items: repositorySchema },
+    page: { type: 'integer' },
+    perPage: { type: 'integer' },
+    total: { type: 'integer' }
+  }
+});
 
 export function validateRepositories(items) {
   const ok = validate(items);
   return { ok, errors: ok ? [] : validate.errors };
+}
+
+export function validateGatewayResponse(payload) {
+  const ok = validateGateway(payload);
+  return { ok, errors: ok ? [] : validateGateway.errors };
 }

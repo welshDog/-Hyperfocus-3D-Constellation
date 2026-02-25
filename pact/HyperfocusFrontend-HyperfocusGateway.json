@@ -1,0 +1,53 @@
+{
+  "consumer": {
+    "name": "HyperfocusFrontend"
+  },
+  "interactions": [
+    {
+      "description": "a request for repositories",
+      "providerState": "repositories exist",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/repositories"
+      },
+      "response": {
+        "body": {
+          "items": [
+            {
+              "category": "Creative",
+              "description": "desc",
+              "githubUrl": "https://github.com/example",
+              "language": "JavaScript",
+              "name": "Example",
+              "stars": 1,
+              "status": "active",
+              "updated": "today"
+            }
+          ],
+          "page": 1,
+          "perPage": 50,
+          "total": 1
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "12.5.2"
+    },
+    "pactRust": {
+      "ffi": "0.4.20",
+      "models": "1.2.0"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "HyperfocusGateway"
+  }
+}
