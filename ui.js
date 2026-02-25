@@ -1,5 +1,3 @@
-import { repositories } from './data.js';
-
 export class UIManager {
   constructor(callbacks = {}) {
     this.callbacks = callbacks;
@@ -45,6 +43,9 @@ export class UIManager {
         // Update active state
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         e.currentTarget.classList.add('active');
+        if (this.audioEnabled) {
+          this.playClickSound();
+        }
       });
     });
 

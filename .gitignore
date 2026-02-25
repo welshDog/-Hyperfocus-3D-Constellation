@@ -5,6 +5,8 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+vendor/
+docs-portal/node_modules/
 
 # Testing
 .nyc_output/
@@ -16,6 +18,7 @@ dist/
 build/
 out/
 .next/
+docs-portal/dist/
 
 # IDE
 .vscode/

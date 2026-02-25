@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Repository",
+  "type": "object",
+  "required": ["name", "category", "description", "language", "stars", "updated", "status", "githubUrl"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "category": {
+      "type": "string",
+      "enum": ["Core Empire", "Creative", "Dev Tools", "Social"]
+    },
+    "description": { "type": "string" },
+    "language": { "type": "string" },
+    "stars": { "type": "number", "minimum": 0 },
+    "updated": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "development", "maintenance", "Active", "Development", "Maintenance"] },
+    "githubUrl": { "type": "string", "format": "uri" }
+  }
+}

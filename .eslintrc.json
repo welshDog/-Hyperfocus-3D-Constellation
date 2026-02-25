@@ -10,6 +10,42 @@
     "sourceType": "module"
   },
   "rules": {
+    "linebreak-style": "off",
+    "one-var": "off",
+    "one-var-declaration-per-line": "off",
+    "no-trailing-spaces": "warn",
+    "arrow-parens": "off",
+    "prefer-destructuring": "off",
+    "class-methods-use-this": "off",
+    "no-nested-ternary": "off",
+    "dot-notation": "off",
+    "indent": "off",
+    "default-case": "off",
+    "no-alert": "off",
+    "quote-props": "off",
+    "import/extensions": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
+    "comma-dangle": "off",
+    "arrow-body-style": "off",
+    "array-callback-return": "off",
+    "consistent-return": "off",
+    "no-undef": "off",
+    "function-paren-newline": "off",
+    "function-call-argument-newline": "off",
+    "operator-linebreak": "off",
+    "no-lonely-if": "off",
+    "no-await-in-loop": "off",
+    "no-promise-executor-return": "off",
+    "no-empty": "off",
+    "no-new": "off",
+    "max-classes-per-file": "off",
+    "no-underscore-dangle": "off",
+    "object-curly-newline": "off",
+    "lines-between-class-members": "off",
+    "prefer-exponentiation-operator": "off",
+    "no-restricted-properties": "off",
     "no-unused-vars": [
       "warn",
       {
@@ -53,6 +89,12 @@
       "files": ["tests/**/*.js"],
       "env": {
         "jest": true
+      }
+    },
+    {
+      "files": ["tools/**/*.cjs", "sw.js"],
+      "env": {
+        "node": true
       }
     }
   ]

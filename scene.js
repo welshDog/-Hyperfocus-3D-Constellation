@@ -26,7 +26,7 @@ import {
   LineSegments,
   Vector3
 } from 'three';
-import { repositories, categoryConfig } from './data.js';
+import { categoryConfig } from './data.js';
 
 export class GalaxyScene {
   constructor(canvasId, callbacks = {}) {
@@ -51,6 +51,7 @@ export class GalaxyScene {
     
     // State
     this.isMotionReduced = false;
+    this.repositories = [];
     
     // Performance
     this.frameCount = 0;
@@ -180,7 +181,7 @@ export class GalaxyScene {
   }
 
   createRepositorySpheres() {
-    repositories.forEach((repo, index) => {
+    this.repositories.forEach((repo, index) => {
       this.createRepoSphere(repo, index);
     });
     this.createConnectionLines();
@@ -191,7 +192,7 @@ export class GalaxyScene {
     const starCount = Math.max(repo.stars, 0.5);
     const radius = Math.max(0.5 + (starCount * 0.3), 0.8);
     
-    const angle = (index / repositories.length) * Math.PI * 8;
+    const angle = (index / this.repositories.length) * Math.PI * 8;
     const distance = 15 + (index % 4) * 8;
     const height = (Math.sin(angle * 0.5) * 5) + (Math.random() - 0.5) * 3;
     
@@ -284,8 +285,8 @@ export class GalaxyScene {
     const lineGeometry = new BufferGeometry();
     const linePositions = [];
     
-    repositories.forEach((repo1, i) => {
-      repositories.forEach((repo2, j) => {
+    this.repositories.forEach((repo1, i) => {
+      this.repositories.forEach((repo2, j) => {
         if (i < j && repo1.category === repo2.category && Math.random() > 0.7) {
           const sphere1 = this.repoSpheres[i];
           const sphere2 = this.repoSpheres[j];
@@ -605,5 +606,12 @@ export class GalaxyScene {
         sphere.userData.targetScale = isVisible ? 1 : 0.1;
       }
     });
+  }
+
+  setRepositories(repos) {
+    this.repositories = Array.isArray(repos) ? repos : [];
+    this.repoSpheres.forEach(s => this.scene.remove(s));
+    this.repoSpheres = [];
+    this.createRepositorySpheres();
   }
 }

@@ -8,8 +8,8 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+                "three": "/vendor/three/three.module.js",
+                "three/addons/": "/vendor/three/examples/jsm/"
             }
         }
     </script>
@@ -17,25 +17,25 @@
 <body>
     <!-- Canvas Container -->
     <div id="canvas-container">
-        <canvas id="galaxy-canvas"></canvas>
+        <canvas id="galaxy-canvas" data-testid="galaxy-canvas"></canvas>
     </div>
 
     <!-- UI Overlay -->
-    <div id="ui-overlay">
+    <div id="ui-overlay" data-testid="ui-overlay">
         <!-- Navigation Bar -->
         <div class="nav-bar glass-panel">
             <div class="nav-content">
-                <h1 class="constellation-title">
+                <h1 class="constellation-title" data-testid="constellation-title">
                     <span class="title-icon">✨</span>
                     Hyperfocus Constellation
                 </h1>
                 <div class="search-container">
-                    <input type="text" class="search-input" id="search-input" placeholder="Search repositories..." aria-label="Search repositories">
-                    <button class="voice-btn" id="voice-search-btn" aria-label="Voice search">🎤</button>
+                    <input type="text" class="search-input" id="search-input" data-testid="search-input" placeholder="Search repositories..." aria-label="Search repositories">
+                    <button class="voice-btn" id="voice-search-btn" data-testid="voice-search-btn" aria-label="Voice search">🎤</button>
                 </div>
                 <div class="performance-display">
-                    <span id="fps-counter">FPS: 60</span>
-                    <span id="node-count">Nodes: 0</span>
+                    <span id="fps-counter" data-testid="fps-counter">FPS: 60</span>
+                    <span id="node-count" data-testid="node-count">Nodes: 0</span>
                 </div>
             </div>
         </div>
@@ -44,20 +44,20 @@
         <div class="filter-panel glass-panel">
             <h3>Category Filters</h3>
             <div class="category-filters">
-                <button class="filter-btn active" data-category="all">
-                    <span class="filter-icon">🌌</span> All Sectors <span id="count-all" class="count-badge">0</span>
+                <button class="filter-btn active" data-category="all" data-testid="filter-all">
+                    <span class="filter-icon">🌌</span> All Sectors <span id="count-all" class="count-badge" data-testid="count-all">0</span>
                 </button>
-                <button class="filter-btn" data-category="Core Empire">
-                    <span class="filter-icon">🏛️</span> Core Empire <span id="count-core" class="count-badge">0</span>
+                <button class="filter-btn" data-category="Core Empire" data-testid="filter-core">
+                    <span class="filter-icon">🏛️</span> Core Empire <span id="count-core" class="count-badge" data-testid="count-core">0</span>
                 </button>
-                <button class="filter-btn" data-category="Creative">
-                    <span class="filter-icon">🎨</span> Creative <span id="count-creative" class="count-badge">0</span>
+                <button class="filter-btn" data-category="Creative" data-testid="filter-creative">
+                    <span class="filter-icon">🎨</span> Creative <span id="count-creative" class="count-badge" data-testid="count-creative">0</span>
                 </button>
-                <button class="filter-btn" data-category="Dev Tools">
-                    <span class="filter-icon">🛠️</span> Dev Tools <span id="count-devtools" class="count-badge">0</span>
+                <button class="filter-btn" data-category="Dev Tools" data-testid="filter-devtools">
+                    <span class="filter-icon">🛠️</span> Dev Tools <span id="count-devtools" class="count-badge" data-testid="count-devtools">0</span>
                 </button>
-                <button class="filter-btn" data-category="Social">
-                    <span class="filter-icon">🤝</span> Social <span id="count-social" class="count-badge">0</span>
+                <button class="filter-btn" data-category="Social" data-testid="filter-social">
+                    <span class="filter-icon">🤝</span> Social <span id="count-social" class="count-badge" data-testid="count-social">0</span>
                 </button>
             </div>
         </div>
@@ -67,34 +67,34 @@
             <h3>Accessibility Controls</h3>
             <div class="control-grid">
                 <label class="control-item">
-                    <input type="checkbox" id="motion-reduction">
+                    <input type="checkbox" id="motion-reduction" data-testid="motion-reduction" aria-label="Reduce Motion">
                     <span class="control-label">Reduce Motion</span>
                 </label>
                 <label class="control-item">
-                    <input type="checkbox" id="focus-mode">
+                    <input type="checkbox" id="focus-mode" data-testid="focus-mode" aria-label="Focus Mode">
                     <span class="control-label">Focus Mode</span>
                 </label>
                 <label class="control-item">
-                    <input type="checkbox" id="high-contrast">
+                    <input type="checkbox" id="high-contrast" data-testid="high-contrast" aria-label="High Contrast">
                     <span class="control-label">High Contrast</span>
                 </label>
                 <label class="control-item">
-                    <input type="checkbox" id="audio-enabled">
+                    <input type="checkbox" id="audio-enabled" data-testid="audio-enabled" aria-label="Audio Effects">
                     <span class="control-label">Audio FX</span>
                 </label>
             </div>
             <div class="volume-controls">
                 <label for="ambient-volume">Ambient Volume: <span id="ambient-value">50</span>%</label>
-                <input type="range" id="ambient-volume" class="volume-slider" min="0" max="100" value="50">
+                <input type="range" id="ambient-volume" class="volume-slider" data-testid="ambient-volume" min="0" max="100" value="50" aria-label="Ambient Volume">
                 <label for="effects-volume">Effects Volume: <span id="effects-value">30</span>%</label>
-                <input type="range" id="effects-volume" class="volume-slider" min="0" max="100" value="30">
+                <input type="range" id="effects-volume" class="volume-slider" data-testid="effects-volume" min="0" max="100" value="30" aria-label="Effects Volume">
             </div>
         </div>
 
         <!-- Mini-map (Bottom Right) -->
         <div class="minimap glass-panel">
             <h4>Galaxy Map</h4>
-            <canvas id="minimap-canvas"></canvas>
+            <canvas id="minimap-canvas" data-testid="minimap"></canvas>
             <div class="minimap-legend">
                 <div class="legend-item">
                     <span class="legend-color" style="background: #00d4ff;"></span> Core
@@ -107,53 +107,53 @@
 
         <!-- Tour Controls (Bottom Left) -->
         <div class="tour-controls glass-panel">
-            <button class="btn btn--primary" id="start-tour">
+            <button class="btn btn--primary" id="start-tour" data-testid="start-tour" aria-label="Start Tour">
                 <span>🚀</span> Start Tour
             </button>
-            <button class="btn btn--secondary" id="export-view">
+            <button class="btn btn--secondary" id="export-view" data-testid="export-view" aria-label="Export View">
                 <span>📸</span> Export View
             </button>
-            <button class="btn btn--outline" id="reset-view">
+            <button class="btn btn--outline" id="reset-view" data-testid="reset-view" aria-label="Reset Camera">
                 <span>🔄</span> Reset Camera
             </button>
         </div>
 
         <!-- Bookmarks Panel (Bottom Center) -->
-        <div class="bookmarks-panel glass-panel hidden" id="bookmarks-panel">
+        <div class="bookmarks-panel glass-panel hidden" id="bookmarks-panel" data-testid="bookmarks-panel">
             <div class="bookmarks-header">
                 <h3>⭐ Bookmarked Repos</h3>
-                <button class="toggle-btn" id="toggle-bookmarks">▼</button>
+                <button class="toggle-btn" id="toggle-bookmarks" data-testid="toggle-bookmarks" aria-label="Toggle Bookmarks">▼</button>
             </div>
-            <div class="bookmarks-list" id="bookmarks-list">
+            <div class="bookmarks-list" id="bookmarks-list" data-testid="bookmarks-list">
                 <!-- Bookmarks will be added here -->
             </div>
         </div>
 
         <!-- Info Panel (Right Slide-out) -->
-        <div class="info-panel glass-panel hidden" id="info-panel">
+        <div class="info-panel glass-panel hidden" id="info-panel" data-testid="info-panel">
             <div class="info-header">
-                <h2 id="repo-name">Repository Name</h2>
-                <button class="close-btn" id="close-info">✕</button>
+                <h2 id="repo-name" data-testid="repo-name">Repository Name</h2>
+                <button class="close-btn" id="close-info" data-testid="close-info" aria-label="Close Info">✕</button>
             </div>
             <div class="info-content">
                 <div class="repo-meta">
                     <div class="repo-stats">
-                        <span class="language-tag" id="repo-language">JavaScript</span>
-                        <span class="stars-count">⭐ <span id="repo-stars">0</span></span>
-                        <span class="issues-count">🐛 <span id="repo-issues">0</span></span>
+                        <span class="language-tag" id="repo-language" data-testid="repo-language">JavaScript</span>
+                        <span class="stars-count">⭐ <span id="repo-stars" data-testid="repo-stars">0</span></span>
+                        <span class="issues-count">🐛 <span id="repo-issues" data-testid="repo-issues">0</span></span>
                     </div>
                     <div class="status">Status: <span id="repo-status">Active</span></div>
                     <div class="updated">Updated: <span id="repo-updated">Just now</span></div>
                 </div>
                 <p id="repo-description">Repository description goes here...</p>
                 <div class="repo-actions">
-                    <a href="#" target="_blank" class="btn btn--primary" id="repo-link">
+                    <a href="#" target="_blank" class="btn btn--primary" id="repo-link" data-testid="repo-link" aria-label="View on GitHub">
                         <span>🔗</span> View on GitHub
                     </a>
-                    <button class="btn btn--secondary" id="bookmark-btn">
+                    <button class="btn btn--secondary" id="bookmark-btn" data-testid="bookmark-btn" aria-label="Bookmark">
                         <span>⭐</span> Bookmark
                     </button>
-                    <button class="btn btn--outline" id="share-btn">
+                    <button class="btn btn--outline" id="share-btn" data-testid="share-btn" aria-label="Share">
                         <span>📤</span> Share
                     </button>
                 </div>
@@ -162,7 +162,7 @@
     </div>
 
     <!-- Loading Screen -->
-    <div id="loading-screen">
+    <div id="loading-screen" data-testid="loading-screen">
         <div class="loading-content">
             <div class="loading-spinner">
                 <div class="spinner-ring"></div>
@@ -170,18 +170,18 @@
                 <div class="spinner-ring"></div>
             </div>
             <h2>Initializing Galaxy...</h2>
-            <p id="loading-status">Calibrating sensors...</p>
+            <p id="loading-status" data-testid="loading-status">Calibrating sensors...</p>
             <div class="loading-progress">
-                <div id="loading-bar"></div>
+                <div id="loading-bar" data-testid="loading-bar"></div>
             </div>
         </div>
     </div>
 
     <!-- Achievement Notifications -->
-    <div id="achievement-notification" class="achievement-toast hidden">
+    <div id="achievement-notification" class="achievement-toast hidden" data-testid="achievement-toast">
         <div class="achievement-content">
             <span class="achievement-icon">🏆</span>
-            <span id="achievement-text"></span>
+            <span id="achievement-text" data-testid="achievement-text"></span>
         </div>
     </div>
 
@@ -191,11 +191,25 @@
         console.error('Global Error:', e);
         const status = document.getElementById('loading-status');
         if (status) status.innerHTML = `<span style="color: #ff4444">Error: ${e.message}</span>`;
+        window.__metrics = window.__metrics || { errors: 0, rejections: 0, start: performance.now(), paint: 0, load: 0 };
+        window.__metrics.errors += 1;
       });
       window.addEventListener('unhandledrejection', function(e) {
         console.error('Unhandled Rejection:', e.reason);
         const status = document.getElementById('loading-status');
         if (status) status.innerHTML = `<span style="color: #ff4444">Error: ${e.reason.message || e.reason}</span>`;
+        window.__metrics = window.__metrics || { errors: 0, rejections: 0, start: performance.now(), paint: 0, load: 0 };
+        window.__metrics.rejections += 1;
+      });
+      window.addEventListener('load', function() {
+        window.__metrics = window.__metrics || { errors: 0, rejections: 0, start: performance.now(), paint: 0, load: 0 };
+        const paint = performance.getEntriesByType('paint').find(p => p.name === 'first-contentful-paint');
+        if (paint) window.__metrics.paint = paint.startTime;
+        window.__metrics.load = performance.now();
+        try {
+          localStorage.setItem('hyperfocus_metrics', JSON.stringify(window.__metrics));
+          console.log('Metrics', window.__metrics);
+        } catch (_) {}
       });
     </script>
 

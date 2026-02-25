@@ -7,7 +7,9 @@ const ASSETS_TO_CACHE = [
   './scene.js',
   './ui.js',
   './data.js',
-  './data/repos.json'
+  './data/repos.json',
+  './vendor/three/three.module.js',
+  './vendor/three/examples/jsm/controls/OrbitControls.js'
 ];
 
 // Install Service Worker and cache assets

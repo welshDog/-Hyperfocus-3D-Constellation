@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Hyperfocus Gateway",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/repositories": {
+      "get": {
+        "summary": "List repositories",
+        "responses": {
+          "200": {
+            "description": "Repository list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayResponseV1"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Repository": {
+        "type": "object",
+        "required": ["name", "category", "description", "language", "stars", "updated", "status", "githubUrl"],
+        "properties": {
+          "name": { "type": "string" },
+          "category": { "type": "string", "enum": ["Core Empire", "Creative", "Dev Tools", "Social"] },
+          "description": { "type": "string" },
+          "language": { "type": "string" },
+          "stars": { "type": "number" },
+          "updated": { "type": "string" },
+          "status": { "type": "string" },
+          "githubUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "GatewayResponseV1": {
+        "type": "object",
+        "required": ["items", "page", "perPage", "total"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Repository" }
+          },
+          "page": { "type": "integer" },
+          "perPage": { "type": "integer" },
+          "total": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

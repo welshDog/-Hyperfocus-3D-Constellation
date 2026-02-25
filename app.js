@@ -1,12 +1,13 @@
-import { repositories } from './data.js';
+import { repositories as staticRepositories } from './data.js';
+import { getRepositories } from './gateway.js';
 import { GalaxyScene } from './scene.js';
 
 class ConstellationApp {
   constructor() {
     this.bookmarkedRepos = new Set();
     this.ui = null;
+    this.repos = staticRepositories;
     
-    // Initialize Galaxy Scene
     this.scene = new GalaxyScene('galaxy-canvas', {
       onSelect: (repo) => {
         if (this.ui) {
@@ -20,7 +21,6 @@ class ConstellationApp {
       }
     });
     
-    // Lazy Initialize UI
     this.initUI().catch(err => {
       console.error('Failed to initialize UI:', err);
       const loadingStatus = document.getElementById('loading-status');
@@ -28,6 +28,21 @@ class ConstellationApp {
         loadingStatus.innerHTML = `<span style="color: #ff4444">Error: ${err.message}</span>`;
       }
     });
+
+    this.initializeData().catch(err => {
+      console.error('Data initialization failed:', err);
+      this.scene.setRepositories(staticRepositories);
+    });
+  }
+
+  async initializeData() {
+    const data = await getRepositories();
+    if (Array.isArray(data) && data.length > 0) {
+      this.repos = data;
+    } else {
+      this.repos = staticRepositories;
+    }
+    this.scene.setRepositories(this.repos);
   }
 
   async initUI() {
@@ -56,7 +71,7 @@ class ConstellationApp {
         onBookmarkToggle: () => this.toggleBookmark(),
         onBookmarkClick: (repoName) => {
           this.scene.flyToRepository(repoName);
-          const repo = repositories.find(r => r.name === repoName);
+          const repo = this.repos.find(r => r.name === repoName);
           if (repo && this.ui) this.ui.showRepoInfo(repo, true);
         },
         onBookmarkRemove: (repoName) => this.removeBookmark(repoName),
@@ -83,7 +98,7 @@ class ConstellationApp {
       return;
     }
 
-    const matches = repositories.filter(repo => 
+    const matches = this.repos.filter(repo => 
       repo.name.toLowerCase().includes(query.toLowerCase()) ||
       repo.description.toLowerCase().includes(query.toLowerCase()) ||
       repo.category.toLowerCase().includes(query.toLowerCase())
@@ -107,7 +122,7 @@ class ConstellationApp {
   }
 
   startTour() {
-    const tourRepositories = repositories.filter(r => r.stars > 0);
+    const tourRepositories = this.repos.filter(r => r.stars > 0);
     if (tourRepositories.length === 0) return;
     
     let tourIndex = 0;
@@ -158,13 +173,13 @@ class ConstellationApp {
       this.ui.triggerAchievement('Collector', 'Repository bookmarked!');
     }
     
-    this.ui.updateBookmarksList(this.bookmarkedRepos, repositories);
+    this.ui.updateBookmarksList(this.bookmarkedRepos, this.repos);
     this.ui.updateBookmarkButton(this.bookmarkedRepos.has(repoName));
   }
 
   removeBookmark(repoName) {
     this.bookmarkedRepos.delete(repoName);
-    this.ui.updateBookmarksList(this.bookmarkedRepos, repositories);
+    this.ui.updateBookmarksList(this.bookmarkedRepos, this.repos);
     
     // Update button if currently showing this repo
     const selectedRepo = this.scene.selectedRepo;
@@ -175,14 +190,14 @@ class ConstellationApp {
 
   updateCounts() {
     const counts = {
-      all: repositories.length,
+      all: this.repos.length,
       'Core Empire': 0,
       'Creative': 0,
       'Dev Tools': 0,
       'Social': 0
     };
     
-    repositories.forEach(repo => {
+    this.repos.forEach(repo => {
       counts[repo.category]++;
     });
     
